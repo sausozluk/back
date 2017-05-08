@@ -1,0 +1,34 @@
+{
+  "name": "sozluk-api",
+  "version": "0.0.1",
+  "scripts": {
+    "start": "node app",
+    "doc": "apidoc -i libs/routers -o docs/",
+    "test": "cd .. && npm test"
+  },
+  "dependencies": {
+    "async": "^2.1.4",
+    "body-parser": "1.15.0",
+    "colors": "1.0.3",
+    "cookie-parser": "1.4.1",
+    "cors": "2.7.1",
+    "emailjs": "1.0.4",
+    "express": "4.13.4",
+    "faker": "3.1.0",
+    "helmet": "1.3.0",
+    "js-sha512": "0.2.2",
+    "lodash": "4.6.1",
+    "mongoose": "4.4.9",
+    "morgan": "1.7.0",
+    "promise": "7.1.1",
+    "rand-token": "0.2.1",
+    "request": "2.69.0",
+    "slug": "0.9.1",
+    "uuid": "2.0.1",
+    "winston": "2.2.0",
+    "ws": "1.1.1"
+  },
+  "devDependencies": {
+    "apidoc": "^0.13.1"
+  }
+}
