@@ -3,6 +3,7 @@ var Entry = $("Entry");
 var User = $("User");
 var _ = require("lodash");
 var async = require("async");
+var users$ = require(__dirname + '/../services/users');
 
 module.exports = {
   getProfileWithSlug: function (req, res) {
@@ -119,5 +120,30 @@ module.exports = {
         }
       })
       .then(null, $error(res));
+  },
+  updateUserSettings: function (req, res) {
+    var _id = req.user_mdl._id;
+    var settings = req.body;
+
+    users$.updateUserSettings(_id, settings)
+      .then(function () {
+        res.json({
+          success: true
+        });
+      })
+      .catch(function () {
+        res.json({
+          success: false,
+          message: "başaramadık :("
+        });
+      });
+  },
+  getMe: function (req, res) {
+    var user = req.user_mdl;
+
+    res.json({
+      success: true,
+      data: user.settings
+    });
   }
 };

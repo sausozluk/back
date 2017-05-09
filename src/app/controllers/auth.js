@@ -6,7 +6,6 @@ var utils = require(__dirname + "/../../libs/utils");
 
 module.exports = {
   login: function (req, res) {
-    var cache = {};
     var info = req.body;
 
     User.findOne({
@@ -37,12 +36,13 @@ module.exports = {
       .then(null, $error(res));
   },
   register: function (req, res) {
-    var cache = {};
     var info = req.body;
 
     var username = info.username.trim();
+    var slug = slug(username);
 
-    if (reserved.indexOf(username) > -1) {
+    if (reserved.indexOf(username) > -1 ||
+      reserved.indexOf(slug) > -1) {
       res.json({
         "success": false,
         "message": "önemini kanıtlaman lazım"
@@ -123,11 +123,12 @@ module.exports = {
     var index = user.tokens.indexOf(token);
     user.tokens.splice(index, 1);
 
-    user.save().then(function () {
-      res.json({
-        "success": true
-      });
-    })
+    user.save()
+      .then(function () {
+        res.json({
+          "success": true
+        });
+      })
       .then(null, $error(res));
   }
 };

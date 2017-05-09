@@ -11,7 +11,7 @@ module.exports = {
         if (entry) {
           Topic.findOneAndUpdate({entries: entry._id}, {$pull: {entries: entry._id}})
             .then(function (topic) {
-              if (topic.entries.length == 1) {
+              if (topic.entries.length === 1) {
                 topic.remove()
               }
 
