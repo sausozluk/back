@@ -39,10 +39,10 @@ module.exports = {
     var info = req.body;
 
     var username = info.username.trim();
-    var slug = slug(username);
+    var username_slug = slug(username);
 
     if (reserved.indexOf(username) > -1 ||
-      reserved.indexOf(slug) > -1) {
+      reserved.indexOf(username_slug) > -1) {
       res.json({
         "success": false,
         "message": "önemini kanıtlaman lazım"
