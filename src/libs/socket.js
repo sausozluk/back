@@ -14,7 +14,10 @@ module.exports = function (server, next) {
 
   var __send = function (slug, data) {
     if (global.clients.hasOwnProperty(slug)) {
-      global.clients[slug].send(JSON.stringify(data));
+      var targets = global.clients[slug];
+      for (var i in targets) {
+        targets[i].send(JSON.stringify(data));
+      }
     }
   };
 
@@ -24,7 +27,8 @@ module.exports = function (server, next) {
 
       if (req.action === 'send_message') {
         var data = req.data;
-        var user = global.clients[slug].__data;
+        var user = ws.__data;
+
         __send(data.to, {
           action: 'receive_message',
           data: {
@@ -34,14 +38,16 @@ module.exports = function (server, next) {
           }
         });
 
-        // db
         chats$.sendMessage(user, data.to, data.message);
       }
     });
 
     ws.on("close", function () {
       $logger.info(slug, 'connection lost');
-      delete global.clients[slug];
+      delete global.clients[slug][ws.__data.token];
+      if (!Object.keys(global.clients[slug]).length) {
+        delete global.clients[slug];
+      }
     });
   };
 
@@ -55,7 +61,13 @@ module.exports = function (server, next) {
         .then(function (user) {
           user.token = token;
           ws.__data = user;
-          global.clients[user.slug] = ws;
+
+          if (!global.clients.hasOwnProperty(user.slug)) {
+            global.clients[user.slug] = {};
+          }
+
+          global.clients[user.slug][token] = ws;
+
           $logger.info(user.slug, 'connected!');
           __defineEvents(ws, user.slug);
         })
