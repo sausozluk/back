@@ -13,9 +13,10 @@ var User = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function (v) {
-        return v.trim().length;
+        var length = v.trim().length;
+        return length > 0 && length < 41;
       },
-      message: "{VALUE} cannot be empty"
+      message: "bizde 40 karakter kısıtlaması var salih abi :("
     }
   },
   "slug": {
@@ -41,7 +42,7 @@ var User = new mongoose.Schema({
       validator: function (v) {
         return utils.emailPattern.test(v);
       },
-      message: "Not a valid email address!"
+      message: "böyle mail mi olur, açık adres vereydin?"
     }
   },
   "password": {
