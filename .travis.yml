@@ -11,7 +11,7 @@ notifications:
   - frknbasaran@gmail.com
 script:
 - cd src
-- docker build -t api .
+- docker build  --network 'host' -t api .
 - docker tag api:latest $DOCKER_HUB_USERNAME/api:prod
 - docker push $DOCKER_HUB_USERNAME/api:prod
 env:
