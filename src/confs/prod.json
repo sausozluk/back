@@ -1,0 +1,3 @@
+{
+  "mongo_uri": "mongodb://db:27017"
+}

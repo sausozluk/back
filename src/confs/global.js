@@ -3,7 +3,7 @@ module.exports = {
   errorMail: 'relfishere@gmail.com',
   jokerToken: "BLYAD",
   requestTimeout: 5 * 1000,
-  db: process.env['SOZLUK_DB_URI'] || "mongodb://db:27017",
+  db: $env_config['mongo_uri'],
   mail: {
     from: "sozluk@post.com",
     smtp: "smtp.mail.com",
