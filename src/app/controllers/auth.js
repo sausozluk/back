@@ -143,7 +143,7 @@ module.exports = {
               isAlive: true,
               user_id: user.id,
               slug: user.slug,
-              count: count
+              unread: count
             }
           });
         }
