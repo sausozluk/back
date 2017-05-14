@@ -4,6 +4,7 @@ var path = __dirname + "/../app/models";
 var idm = require(__dirname + "/idm");
 
 global.mongoose = mongoose;
+global.mongoose.Promise = require('promise');
 global.ObjectId = mongoose.Schema.Types.ObjectId;
 global.Mixed = mongoose.Schema.Types.Mixed;
 

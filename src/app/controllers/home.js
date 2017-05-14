@@ -25,7 +25,7 @@ module.exports = {
   default: function (req, res) {
     res.status(404).json({
       success: false,
-      msg: "yok ki"
+      message: "yok ki"
     });
   }
 };

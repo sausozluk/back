@@ -16,7 +16,9 @@ module.exports = function (server, next) {
     if (global.clients.hasOwnProperty(slug)) {
       var targets = global.clients[slug];
       for (var i in targets) {
-        targets[i].send(JSON.stringify(data));
+        if (targets.hasOwnProperty(i)) {
+          targets[i].send(JSON.stringify(data));
+        }
       }
     }
   };
@@ -24,11 +26,13 @@ module.exports = function (server, next) {
   var __defineEvents = function (ws, slug) {
     ws.on("message", function (obj) {
       var req = JSON.parse(obj);
+      var user = ws.__data;
+      var data = req.data;
 
       if (req.action === 'send_message') {
-        var data = req.data;
-        var user = ws.__data;
-
+        /**
+         * {action: send_message, data: {to: target_slug, message: message_content}}
+         */
         __send(data.to, {
           action: 'receive_message',
           data: {
@@ -39,6 +43,11 @@ module.exports = function (server, next) {
         });
 
         chats$.sendMessage(user, data.to, data.message);
+      } else if (req.action === 'mark_messages') {
+        /**
+         * {action: mark_messages, data: {to: target_slug}}
+         */
+        chats$.markMessages(user._id, [data.to, slug].sort().join('-'));
       }
     });
 

@@ -196,7 +196,7 @@ module.exports = {
       randomTask(function (topic) {
         results.push(topic);
 
-        if (--loop == 0) {
+        if (--loop === 0) {
           res.json({
             success: true,
             data: results

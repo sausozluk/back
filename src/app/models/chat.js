@@ -1,9 +1,13 @@
 var mongoose = require("mongoose");
-var Message = require(__dirname + "/message");
 
 var Chat = new mongoose.Schema({
   users: [{type: ObjectId, ref: 'User'}],
-  messages: [Message],
+  messages: [{
+    message: {type: String, required: true},
+    user: {type: ObjectId, ref: "User", required: true},
+    seen: {type: Boolean, default: false},
+    date: {type: Date, default: Date.now}
+  }],
   slug: {type: String, required: true, unique: true}
 }, {
   collection: "chats",

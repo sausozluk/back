@@ -1,18 +1,15 @@
 var Chat = $("Chat");
 var User = $("User");
-var Message = $("Message");
 var Promise = require("promise");
 var _ = require('lodash');
 
 module.exports = {
   createChat: function (user_list) {
     return new Promise(function (resolve, reject) {
-      User.find({
-          slug: {$in: user_list},
-          "settings.messaging": true
-        })
+      User
+        .find({slug: {$in: user_list}, "settings.messaging": true})
         .then(function (users) {
-          if (users.length == 2) {
+          if (users.length === 2) {
             var chat = new Chat({
               users: users,
               slug: _
@@ -38,7 +35,8 @@ module.exports = {
     return new Promise(function (resolve, reject) {
       var to_user = void 0;
 
-      User.findOne({slug: to_slug})
+      User
+        .findOne({slug: to_slug})
         .then(function (user) {
           if (user) {
             to_user = user;
@@ -51,11 +49,11 @@ module.exports = {
           if (chat) {
             return Chat.update({_id: chat._id}, {
               $push: {
-                messages: new Message({
+                messages: {
                   message: message,
                   user: from_user._id,
                   date: Date.now()
-                })
+                }
               }
             })
           } else {
@@ -63,18 +61,17 @@ module.exports = {
               .then(function (chat) {
                 Chat.update({_id: chat._id}, {
                   $push: {
-                    messages: new Message({
+                    messages: {
                       message: message,
                       user: from_user._id,
                       date: Date.now()
-                    })
+                    }
                   }
                 }).then(function () {
-                    resolve(true)
-                  })
-                  .then(null, function (err) {
-                    reject(false);
-                  });
+                  resolve(true)
+                }).then(null, function (err) {
+                  reject(false);
+                });
               })
               .catch(function (err) {
                 reject(err);
@@ -87,6 +84,33 @@ module.exports = {
         .then(null, function (err) {
           reject(false);
         });
+    });
+  },
+  markMessages: function (from_user, chat_slug) {
+    return new Promise(function (resolve, reject) {
+      Chat
+        .findOne({slug: chat_slug})
+        .then(function (chat) {
+          if (chat) {
+            var messages = chat.messages;
+            messages.forEach(function (message) {
+              if (from_user.toString() !== message.user.toString()) {
+                message['seen'] = true;
+              }
+            });
+
+            return chat.save();
+          } else {
+            resolve(false);
+          }
+        })
+        .then(function () {
+          resolve(true);
+        })
+        .then(null, function (err) {
+          reject(false);
+        });
+
     });
   }
 };

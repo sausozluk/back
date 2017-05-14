@@ -81,18 +81,24 @@ module.exports = {
     }
 
     var chat_slug = [slug, req.user_mdl.slug].sort().join("-");
-    Chat.findOne({slug: chat_slug})
+
+    Chat
+      .findOne({slug: chat_slug})
       .then(function (chat) {
         if (chat) {
-          res.json({
-            success: true,
-            data: chat.messages
-          });
+          chats$.markMessages(req.user_mdl._id, chat_slug)
+            .then(function () {
+              res.json({
+                success: true,
+                data: chat.messages
+              });
+            })
+            .then(null, $error(res));
         } else {
           res.json({
             success: true,
             data: []
-          })
+          });
         }
       })
       .then(null, $error(res));

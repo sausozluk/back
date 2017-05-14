@@ -3,10 +3,12 @@ var User = $("User");
 var slug = require('slug');
 var reserved = require(__dirname + "/../../libs/reserved");
 var utils = require(__dirname + "/../../libs/utils");
+var users$ = require(__dirname + '/../services/users');
 
 module.exports = {
   login: function (req, res) {
     var info = req.body;
+    var cache = {};
 
     User.findOne({
       $or: [{
@@ -23,12 +25,21 @@ module.exports = {
             "message": "yanlış e-posta/şifre"
           });
         } else {
+          cache.user = user;
+
+          return users$.getUserUnseenMessage(user._id);
+        }
+      })
+      .then(function (count) {
+        if (cache.user) {
+          var user = cache.user;
+
           return user
             .save()
             .then(function () {
               res.json({
                 "success": true,
-                "data": $out.successLogin(user)
+                "data": $out.successLogin(user, count)
               });
             });
         }
@@ -37,6 +48,7 @@ module.exports = {
   },
   register: function (req, res) {
     var info = req.body;
+    var cache = {};
 
     var username = info.username.trim();
     var username_slug = slug(username);
@@ -78,12 +90,22 @@ module.exports = {
           user.username = info.username;
           user.email = info.email;
           user.password = info.password;
+
+          cache.user = user;
+
+          return users$.getUserUnseenMessage(null);
+        }
+      })
+      .then(function (count) {
+        if (cache.user) {
+          var user = cache.user;
+
           return user
             .save()
             .then(function () {
               res.json({
                 "success": true,
-                "data": $out.successLogin(user)
+                "data": $out.successLogin(user, count)
               });
             });
         }
@@ -92,6 +114,7 @@ module.exports = {
   },
   check: function (req, res) {
     var token = req.headers.token || $config.jokerToken;
+    var cache = {};
 
     User.findOne({
       "tokens": token
@@ -105,12 +128,22 @@ module.exports = {
             }
           });
         } else {
+          cache.user = user;
+
+          return users$.getUserUnseenMessage(user._id);
+        }
+      })
+      .then(function (count) {
+        if (cache.user) {
+          var user = cache.user;
+
           res.json({
             success: true,
             data: {
               isAlive: true,
               user_id: user.id,
-              slug: user.slug
+              slug: user.slug,
+              count: count
             }
           });
         }

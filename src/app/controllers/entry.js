@@ -125,12 +125,12 @@ module.exports = {
             });
           } else {
             var query = {};
-            if (entry.up.indexOf(req.user_mdl._id) == -1 &&
-              entry.down.indexOf(req.user_mdl._id) == -1) {
+            if (entry.up.indexOf(req.user_mdl._id) === -1 &&
+              entry.down.indexOf(req.user_mdl._id) === -1) {
               query['$push'] = {
                 up: req.user_mdl._id
               };
-            } else if (entry.up.indexOf(req.user_mdl._id) == -1 &&
+            } else if (entry.up.indexOf(req.user_mdl._id) === -1 &&
               entry.down.indexOf(req.user_mdl._id) > -1) {
               query['$push'] = {
                 up: req.user_mdl._id
@@ -178,12 +178,12 @@ module.exports = {
             });
           } else {
             var query = {};
-            if (entry.down.indexOf(req.user_mdl._id) == -1 &&
-              entry.up.indexOf(req.user_mdl._id) == -1) {
+            if (entry.down.indexOf(req.user_mdl._id) === -1 &&
+              entry.up.indexOf(req.user_mdl._id) === -1) {
               query['$push'] = {
                 down: req.user_mdl._id
               };
-            } else if (entry.down.indexOf(req.user_mdl._id) == -1 &&
+            } else if (entry.down.indexOf(req.user_mdl._id) === -1 &&
               entry.up.indexOf(req.user_mdl._id) > -1) {
               query['$push'] = {
                 down: req.user_mdl._id

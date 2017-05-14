@@ -1,5 +1,5 @@
 module.exports = {
-  successLogin: function (mdl) {
+  successLogin: function (mdl, count) {
     var user = mdl.toObject();
     var size = user.tokens.length;
     return {
@@ -8,7 +8,8 @@ module.exports = {
       email: user.email,
       username: user.username,
       slug: user.slug,
-      authority: user.permission
+      authority: user.permission,
+      unread: count
     };
   }
 };
