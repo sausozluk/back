@@ -27,7 +27,6 @@ module.exports = function (next) {
   require(__dirname + "/router")(router);
   app.use("/api/v1", router);
   app.use("/uploads", express.static(__dirname + "/../uploads"));
-  app.use(express.static(__dirname + "/../docs"));
   app.use(routers["home"].default);
   socket(server, function () {
     server.listen(port, utils.expressUp(port, next));

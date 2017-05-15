@@ -120,30 +120,5 @@ module.exports = {
         }
       })
       .then(null, $error(res));
-  },
-  updateUserSettings: function (req, res) {
-    var _id = req.user_mdl._id;
-    var settings = req.body;
-
-    users$.updateUserSettings(_id, settings)
-      .then(function () {
-        res.json({
-          success: true
-        });
-      })
-      .catch(function () {
-        res.json({
-          success: false,
-          message: "başaramadık :("
-        });
-      });
-  },
-  getMe: function (req, res) {
-    var user = req.user_mdl;
-
-    res.json({
-      success: true,
-      data: user.settings
-    });
   }
 };

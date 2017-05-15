@@ -53,9 +53,6 @@ var User = new mongoose.Schema({
     }
   },
   "tokens": [String],
-  settings: {
-    messaging: {type: Boolean, default: true}
-  },
   generation: {
     type: String,
     trim: true

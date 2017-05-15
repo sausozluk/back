@@ -20,27 +20,6 @@ module.exports = {
         });
     });
   },
-  updateUserSettings: function (_id, settings) {
-    return new Promise(function (resolve, reject) {
-      User.findOne({
-        "_id": _id
-      }).exec()
-        .then(function (user) {
-          if (!user) {
-            reject(false);
-          } else {
-            user.settings.messaging = settings.messaging;
-            return user.save();
-          }
-        })
-        .then(function (user) {
-          resolve(user);
-        })
-        .then(null, function () {
-          reject(false)
-        });
-    });
-  },
   getUserUnseenMessage: function (_id) {
     return new Promise(function (resolve, reject) {
       if (!_id) {

@@ -7,7 +7,7 @@ module.exports = {
   createChat: function (user_list) {
     return new Promise(function (resolve, reject) {
       User
-        .find({slug: {$in: user_list}, "settings.messaging": true})
+        .find({slug: {$in: user_list}})
         .then(function (users) {
           if (users.length === 2) {
             var chat = new Chat({

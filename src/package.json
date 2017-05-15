@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "scripts": {
     "start": "node app",
-    "doc": "apidoc -i libs/routers -o docs/",
     "test": "cd .. && npm test"
   },
   "dependencies": {
@@ -28,8 +27,5 @@
     "winston": "2.2.0",
     "ws": "1.1.1",
     "dotenv": "^4.0.0"
-  },
-  "devDependencies": {
-    "apidoc": "^0.13.1"
   }
 }
