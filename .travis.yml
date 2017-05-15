@@ -27,8 +27,6 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_4f35dbab3554_key -iv $encrypted_4f35dbab3554_iv
   -in deploy_key.enc -out ./deploy_key -d
 - docker build --network 'host' --build-arg SOZLUK_ENV=$SOZLUK_ENV -t apitest .
-after_script:
-- docker rm -f app
 deploy:
   provider: script
   skip_cleanup: true
