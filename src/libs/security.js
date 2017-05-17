@@ -4,7 +4,7 @@ var time = function (time) {
   var must = (time ? time : 5) * 60 * 1000;
   return function (req, res, next) {
     if (req.user_mdl) {
-      var username = req.user_mdl;
+      var username = req.user_mdl.username;
       if (!$access.hasOwnProperty(username)) {
         $access[username] = {};
       }
@@ -12,21 +12,38 @@ var time = function (time) {
       var accessOfUser = $access[username];
 
       if (accessOfUser.hasOwnProperty(req.path)) {
-        var lastAccess = accessOfUser[req.path];
-        var now = new Date().getTime();
-        var diff = now - lastAccess;
+        var count = accessOfUser[req.path].count + 1;
 
-        if (diff > must) {
-          accessOfUser[req.path] = now;
+        if (count < 4) {
+          if (count === 3) {
+            accessOfUser[req.path].date = new Date().getTime();
+          }
+
+          accessOfUser[req.path].count = count;
           next();
         } else {
-          res.json({
-            success: false,
-            message: "Daha " + Math.ceil((must - diff) / 1000) + "sn beklemen lazım :("
-          })
+          var now = new Date().getTime();
+          var diff = now - accessOfUser[req.path].date;
+
+          if (diff > must) {
+            accessOfUser[req.path] = {
+              count: 1,
+              date: null
+            };
+
+            next();
+          } else {
+            res.json({
+              success: false,
+              message: "Daha " + Math.ceil((must - diff) / 1000) + "sn beklemen lazım :("
+            });
+          }
         }
       } else {
-        accessOfUser[req.path] = new Date().getTime();
+        accessOfUser[req.path] = {
+          count: 1,
+          date: null
+        };
         next();
       }
     } else {
