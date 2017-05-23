@@ -1,8 +1,14 @@
 var mongoose = require("mongoose");
 var utils = require(__dirname + "/../../libs/utils");
-var slug = require('slug');
+var getSlug = require('speakingurl');
 var sha512 = require("js-sha512").sha512;
 var randomToken = require("rand-token");
+var slug = function (str) {
+  return getSlug(str, {
+    lang: 'tr',
+    symbols: false
+  });
+};
 
 var User = new mongoose.Schema({
   "username": {
@@ -14,9 +20,9 @@ var User = new mongoose.Schema({
     validate: {
       validator: function (v) {
         var length = v.trim().length;
-        return length > 0 && length < 41;
+        return length > 0 && length < 41 && /^[a-zA-Z $0-9ığüşöçİĞÜŞÖÇ]+$/.test(v);
       },
-      message: "bizde 40 karakter kısıtlaması var salih abi :("
+      message: "kullanıcı adı uygunsuz :p"
     }
   },
   "slug": {

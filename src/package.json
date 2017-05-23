@@ -11,6 +11,7 @@
     "colors": "1.0.3",
     "cookie-parser": "1.4.1",
     "cors": "2.7.1",
+    "dotenv": "^4.0.0",
     "emailjs": "1.0.4",
     "express": "4.13.4",
     "faker": "3.1.0",
@@ -22,10 +23,9 @@
     "promise": "7.1.1",
     "rand-token": "0.2.1",
     "request": "2.69.0",
-    "slug": "0.9.1",
+    "speakingurl": "^13.0.0",
     "uuid": "2.0.1",
     "winston": "2.2.0",
-    "ws": "1.1.1",
-    "dotenv": "^4.0.0"
+    "ws": "1.1.1"
   }
 }

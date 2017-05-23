@@ -1,5 +1,11 @@
 var mongoose = require("mongoose");
-var slug = require('slug');
+var getSlug = require('speakingurl');
+var slug = function (str) {
+  return getSlug(str, {
+    lang: 'tr',
+    symbols: false
+  });
+};
 
 var Id = require(__dirname + '/id');
 
@@ -13,9 +19,9 @@ var Topic = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function (v) {
-        return v.trim().length && v.trim().length < 51;
+        return v.trim().length && v.trim().length < 51 && /^[a-zA-Z $0-9ığüşöçİĞÜŞÖÇ]+$/.test(v);
       },
-      message: "50 karakter uzun olamaz la"
+      message: "bu konuyla bi yere varamazsın"
     }
   },
   "slug": {
