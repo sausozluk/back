@@ -1,9 +1,14 @@
 var sha512 = require("js-sha512").sha512;
 var User = $("User");
-var slug = require('slug');
+var getSlug = require('speakingurl');
 var reserved = require(__dirname + "/../../libs/reserved");
-var utils = require(__dirname + "/../../libs/utils");
 var users$ = require(__dirname + '/../services/users');
+var slug = function (str) {
+  return getSlug(str, {
+    lang: 'tr',
+    symbols: false
+  });
+};
 
 module.exports = {
   login: function (req, res) {
