@@ -62,14 +62,6 @@ module.exports = {
       return;
     }
 
-    if (!utils.usernamePattern.test(username)) {
-      res.json({
-        "success": false,
-        "message": "a\'dan z\'ye seviyoz biz :("
-      });
-      return;
-    }
-
     User.findOne({
       $or: [{
         "username": info.username
