@@ -14,11 +14,7 @@ global.$out = require(__dirname + "/libs/out");
 
 $logger.info('SOZLUK_ENV #', sozluk_env);
 
-if (sozluk_env === "prod") {
-  $logger.info('SOZLUK_ENV_CONFIG #', JSON.stringify($env_config));
-}
-
-$mail("sözlük boot", $config.author, new Date());
+$mail("sözlük boot", $config.author, new Date().toString());
 
 require(__dirname + "/libs/db")(function () {
   require(__dirname + "/libs/err")();
