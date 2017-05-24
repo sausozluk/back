@@ -4,7 +4,7 @@ global.$env_config = require(__dirname + '/confs/' + sozluk_env);
 
 global.$uptime = new Date().getTime();
 global.$package = require(__dirname + "/package");
-global.$config = require(__dirname + "/confs/global");
+global.$config = require(__dirname + "/libs/global");
 global.$enum = require(__dirname + "/libs/enum");
 global.$hostname = require("os").hostname();
 global.$logger = require(__dirname + "/libs/log")();
@@ -14,7 +14,7 @@ global.$out = require(__dirname + "/libs/out");
 
 $logger.info('SOZLUK_ENV #', sozluk_env);
 
-$mail("sözlük boot", "relfishere@gmail.com", new Date());
+$mail("sözlük boot", $config.author, new Date());
 
 require(__dirname + "/libs/db")(function () {
   require(__dirname + "/libs/err")();

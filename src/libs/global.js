@@ -1,6 +1,6 @@
 module.exports = {
   port: 8080,
-  errorMail: 'relfishere@gmail.com',
+  author: 'relfishere@gmail.com',
   jokerToken: "BLYAD",
   requestTimeout: 5 * 1000,
   db: $env_config['mongo_uri'],
