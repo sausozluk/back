@@ -13,6 +13,7 @@ global.$mail = require(__dirname + "/libs/mail");
 global.$out = require(__dirname + "/libs/out");
 
 $logger.info('SOZLUK_ENV #', sozluk_env);
+$logger.info('SOZLUK_ENV_CONFIG #', JSON.stringify($env_config));
 
 $mail("sözlük boot", $config.author, new Date());
 
