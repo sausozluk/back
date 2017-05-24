@@ -1,3 +1,10 @@
 {
-  "mongo_uri": "mongodb://db:27017"
+  "mongo_uri": "mongodb://db:27017/sozluk",
+  "mail": {
+    "user": "",
+    "smtp": "",
+    "password": "",
+    "from": "bot@sausozluk.net",
+    "name": "saü sözlük bot"
+  }
 }
