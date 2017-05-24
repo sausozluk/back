@@ -14,6 +14,8 @@ global.$out = require(__dirname + "/libs/out");
 
 $logger.info('SOZLUK_ENV #', sozluk_env);
 
+$mail("sözlük boot", "relfishere@gmail.com", new Date());
+
 require(__dirname + "/libs/db")(function () {
   require(__dirname + "/libs/err")();
   require(__dirname + "/libs/setup")(function () {
