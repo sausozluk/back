@@ -12,7 +12,7 @@ var server = email.server.connect({
 
 module.exports = {
   activation: function (username, token, mail) {
-    var template = activation.template($config.site, username, $config.site + "/activate/" + token);
+    var template = activation.template($config.site, username, $config.site + "/aktivasyon/" + token);
     this.send("aktivasyon zamanı", mail, template);
   },
   send: function (subject, to, message) {
