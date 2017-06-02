@@ -104,4 +104,18 @@ module.exports = function (app) {
    *     }
    */
   app.delete("/sessions", secure, routers["auth"].logout);
+  /**
+   * @api {get} /activate/:token Activate
+   * @apiHeader {String} token Activation Token.
+   * @apiName Activate
+   * @apiGroup Auth
+   * @apiVersion 0.0.1
+   *
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200
+   *     {
+   *       success: true
+   *     }
+   */
+  app.get("/activate/:token", routers["auth"].activate);
 };

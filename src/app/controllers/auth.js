@@ -100,23 +100,14 @@ module.exports = {
 
           cache.user = user;
 
-          return users$.getUserUnseenMessage(null);
+          return user.save();
         }
       })
-      .then(function (count) {
+      .then(function () {
         if (cache.user) {
           var user = cache.user;
-
-          return user
-            .save()
-            .then(function () {
-              $mail.activation(user.username, user.keys.activation, user.email);
-
-              res.json({
-                "success": true,
-                "data": $out.successLogin(user, count)
-              });
-            });
+          $mail.activation(user.username, user.keys.activation, user.email);
+          res.json({"success": true});
         }
       })
       .then(null, $error(res));
@@ -166,6 +157,18 @@ module.exports = {
     user.tokens.splice(index, 1);
 
     user.save()
+      .then(function () {
+        res.json({
+          "success": true
+        });
+      })
+      .then(null, $error(res));
+  },
+  activate: function (req, res) {
+    var token = req.params.token;
+
+    $("User")
+      .update({"keys.activation": token}, {"activate": true})
       .then(function () {
         res.json({
           "success": true
