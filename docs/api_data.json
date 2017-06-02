@@ -1,5 +1,37 @@
 [
   {
+    "type": "get",
+    "url": "/activate/:token",
+    "title": "Activate",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>Activation Token.</p>"
+          }
+        ]
+      }
+    },
+    "name": "Activate",
+    "group": "Auth",
+    "version": "0.0.1",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200\n{\n  success: true\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "src/libs/routers/auth.js",
+    "groupTitle": "Auth"
+  },
+  {
     "type": "Post",
     "url": "/sessions/check",
     "title": "Session Check",

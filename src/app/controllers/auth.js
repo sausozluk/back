@@ -167,7 +167,7 @@ module.exports = {
   activate: function (req, res) {
     var token = req.params.token;
 
-    $("User")
+    User
       .update({"keys.activation": token}, {"activate": true})
       .then(function () {
         res.json({
