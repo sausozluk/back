@@ -6,5 +6,6 @@ module.exports = {
   db: $env_config['mongo_uri'],
   mail: $env_config['mail'],
   randomCount: 5,
-  ids: ['entries_inc', 'topics_inc']
+  ids: ['entries_inc', 'topics_inc'],
+  site: "http://sausozluk.net"
 };

@@ -59,6 +59,16 @@ var User = new mongoose.Schema({
     }
   },
   "tokens": [String],
+  "keys": {
+    "activation": {
+      type: String,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      required: true
+    }
+  },
+  "active": {type: Boolean, default: false},
   generation: {
     type: String,
     trim: true

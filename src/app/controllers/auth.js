@@ -3,6 +3,8 @@ var User = $("User");
 var getSlug = require('speakingurl');
 var reserved = require(__dirname + "/../../libs/reserved");
 var users$ = require(__dirname + '/../services/users');
+var randomToken = require("rand-token");
+
 var slug = function (str) {
   return getSlug(str, {
     lang: 'tr',
@@ -30,9 +32,16 @@ module.exports = {
             "message": "yanlış e-posta/şifre"
           });
         } else {
-          cache.user = user;
+          if (user.active) {
+            cache.user = user;
 
-          return users$.getUserUnseenMessage(user._id);
+            return users$.getUserUnseenMessage(user._id);
+          } else {
+            res.json({
+              "success": false,
+              "message": "aktif değilsin? belki de pasifsin ;)"
+            });
+          }
         }
       })
       .then(function (count) {
@@ -87,6 +96,7 @@ module.exports = {
           user.username = info.username;
           user.email = info.email;
           user.password = info.password;
+          user.keys.activation = randomToken.generate(32);
 
           cache.user = user;
 
@@ -100,6 +110,8 @@ module.exports = {
           return user
             .save()
             .then(function () {
+              $mail.activation(user.username, user.keys.activation, user.email);
+
               res.json({
                 "success": true,
                 "data": $out.successLogin(user, count)
