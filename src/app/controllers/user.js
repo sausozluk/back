@@ -3,7 +3,8 @@ var Entry = $("Entry");
 var User = $("User");
 var _ = require("lodash");
 var async = require("async");
-var users$ = require(__dirname + '/../services/users');
+var sha512 = require("js-sha512").sha512;
+var randomToken = require("rand-token");
 
 module.exports = {
   getProfileWithSlug: function (req, res) {
@@ -117,6 +118,69 @@ module.exports = {
             success: false,
             message: "böyle bi yazar yok"
           })
+        }
+      })
+      .then(null, $error(res));
+  },
+  changeMail: function (req, res) {
+    var info = req.body;
+    var user = req.user_mdl;
+
+    if (info.new_email_a !== info.new_email_b) {
+      res.json({
+        success: false,
+        message: 'daha iki maili aynı giremiyosun'
+      });
+
+      return;
+    }
+
+    if (info.old_email !== user.email ||
+      sha512(info.password) !== user.password) {
+      res.json({
+        success: false,
+        message: 'arkadaşın kendi gelemiyor mu?'
+      });
+
+      return;
+    }
+
+    var key = randomToken.generate(32);
+    var mail = info.new_email_a;
+
+    user.keys.mailChange = {key: key, mail: mail};
+
+    user.save()
+      .then(function () {
+        $mail.mailChange(user.username, key, mail);
+        res.json({success: true});
+      })
+      .then(null, $error(res));
+  },
+  activateMail: function (req, res) {
+    var token = req.params.token;
+    var cache = {};
+
+    User.findOne({"keys.mailChange.key": token})
+      .then(function (user) {
+        if (user) {
+          cache.user = user;
+          user.email = user.keys.mailChange.mail;
+          user.keys.mailChange = {};
+
+          return user.save();
+        }
+      })
+      .then(function () {
+        if (cache.user) {
+          res.json({
+            success: true
+          });
+        } else {
+          res.json({
+            success: false,
+            message: "bulamadım sori"
+          });
         }
       })
       .then(null, $error(res));

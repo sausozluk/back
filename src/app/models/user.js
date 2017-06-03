@@ -66,6 +66,28 @@ var User = new mongoose.Schema({
       lowercase: true,
       trim: true,
       required: true
+    },
+    "mailChange": {
+      "key": {
+        type: String,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        required: false
+      },
+      "mail": {
+        type: String,
+        unique: true,
+        lowercase: true,
+        trim: true,
+        required: false,
+        validate: {
+          validator: function (v) {
+            return utils.emailPattern.test(v);
+          },
+          message: "böyle mail mi olur, açık adres vereydin?"
+        }
+      }
     }
   },
   "active": {type: Boolean, default: false},

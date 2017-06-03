@@ -29,6 +29,7 @@ module.exports = function (app) {
    *     }
    */
   app.get("/users/profile/:slug", routers["user"].getProfileWithSlug);
+  app.get("/users/activate-mail/:token", routers["user"].activateMail);
   /**
    * @api {get} /users/:slug Get User With Slug
    * @apiName GetUser
@@ -47,4 +48,5 @@ module.exports = function (app) {
    *     }
    */
   app.get("/users/:slug", routers["user"].getUserWithSlug);
+  app.post("/users/change-mail", giffMe("body", ["old_email", "password", "new_email_a", "new_email_b"]), secure, routers["user"].changeMail);
 };
