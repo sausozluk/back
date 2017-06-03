@@ -176,7 +176,7 @@ module.exports = {
         if (user) {
           cache.user = user;
           user.email = user.keys.mailChange.mail;
-          user.keys.mailChange = {};
+          user.keys.mailChange.key = randomToken.generate(32);
 
           return user.save();
         }
