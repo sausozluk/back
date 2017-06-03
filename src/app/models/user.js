@@ -63,7 +63,6 @@ var User = new mongoose.Schema({
     "activation": {
       type: String,
       unique: true,
-      lowercase: true,
       trim: true,
       required: true
     },
@@ -71,7 +70,6 @@ var User = new mongoose.Schema({
       "key": {
         type: String,
         unique: true,
-        lowercase: true,
         trim: true,
         required: false
       },
