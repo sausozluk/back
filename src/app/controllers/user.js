@@ -148,14 +148,24 @@ module.exports = {
     var key = randomToken.generate(32);
     var mail = info.new_email_a;
 
-    user.keys.mailChange = {key: key, mail: mail};
+    User.findOne({email: mail})
+      .then(function (exist) {
+        if (exist) {
+          res.json({
+            success: false,
+            message: "başkasının mailine mi göz diktin şirifsiz"
+          });
+        } else {
+          user.keys.mailChange = {key: key, mail: mail};
 
-    user.save()
-      .then(function () {
-        $mail.mailChange(user.username, key, mail);
-        res.json({success: true});
-      })
-      .then(null, $error(res));
+          user.save()
+            .then(function () {
+              $mail.mailChange(user.username, key, mail);
+              res.json({success: true});
+            })
+            .then(null, $error(res));
+        }
+      });
   },
   activateMail: function (req, res) {
     var token = req.params.token;

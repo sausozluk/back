@@ -71,14 +71,14 @@ var User = new mongoose.Schema({
         type: String,
         unique: true,
         trim: true,
-        required: false
+        required: true
       },
       "mail": {
         type: String,
         unique: true,
         lowercase: true,
         trim: true,
-        required: false,
+        required: true,
         validate: {
           validator: function (v) {
             return utils.emailPattern.test(v);
