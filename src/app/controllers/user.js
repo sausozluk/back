@@ -122,11 +122,42 @@ module.exports = {
       })
       .then(null, $error(res));
   },
+  changePassword: function (req, res) {
+    var info = req.body;
+    var user = req.user_mdl;
+
+    if (info['new_password_a'] !== info['new_password_b']) {
+      res.json({
+        success: false,
+        message: 'daha iki şifreyi aynı giremiyosun'
+      });
+
+      return;
+    }
+
+    if (sha512(info['old_password']) !== user.password) {
+      res.json({
+        success: false,
+        message: 'eski şifreni bilmiyosun :O'
+      });
+
+      return;
+    }
+
+    var password = info['new_password_a'];
+    user.password = sha512(password);
+    user.save()
+      .then(function () {
+        $mail.passwordChange(user.username, user.email);
+        res.json({success: true});
+      })
+      .then(null, $error(res));
+  },
   changeMail: function (req, res) {
     var info = req.body;
     var user = req.user_mdl;
 
-    if (info.new_email_a !== info.new_email_b) {
+    if (info['new_email_a'] !== info['new_email_b']) {
       res.json({
         success: false,
         message: 'daha iki maili aynı giremiyosun'
@@ -135,7 +166,7 @@ module.exports = {
       return;
     }
 
-    if (info.old_email !== user.email ||
+    if (info['old_email'] !== user.email ||
       sha512(info.password) !== user.password) {
       res.json({
         success: false,
@@ -146,7 +177,7 @@ module.exports = {
     }
 
     var key = randomToken.generate(32);
-    var mail = info.new_email_a;
+    var mail = info['new_email_a'];
 
     User.findOne({email: mail})
       .then(function (exist) {
