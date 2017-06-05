@@ -144,8 +144,16 @@ module.exports = {
       return;
     }
 
-    var password = info['new_password_a'];
-    user.password = sha512(password);
+    if (!info['new_password_a'].trim().length) {
+      res.json({
+        success: false,
+        message: 'dolu dolu bi şifreyi kim sevmez'
+      });
+
+      return;
+    }
+
+    user.password = info['new_password_a'];
     user.save()
       .then(function () {
         $mail.passwordChange(user.username, user.email);

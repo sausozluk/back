@@ -76,6 +76,15 @@ module.exports = {
       return;
     }
 
+    if (!info.password.trim().length) {
+      res.json({
+        success: false,
+        message: 'dolu dolu bi şifreyi kim sevmez'
+      });
+
+      return;
+    }
+
     User.findOne({
       $or: [{
         "username": info.username
