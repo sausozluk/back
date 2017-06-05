@@ -2,6 +2,14 @@ var Topic = $("Topic");
 var Entry = $("Entry");
 var _ = require("lodash");
 var async = require("async");
+var getSlug = require('speakingurl');
+
+var slug = function (str) {
+  return getSlug(str, {
+    lang: 'tr',
+    symbols: false
+  });
+};
 
 module.exports = {
   create: function (req, res) {
@@ -252,6 +260,18 @@ module.exports = {
             });
           })
           .then(null, $error(res));
+      })
+      .then(null, $error(res));
+  },
+  update: function (req, res) {
+    var id = req.params.id;
+    var title = req.body.title;
+
+    Topic.update({id: id}, {title: title, slug: slug(title)})
+      .then(function () {
+        res.json({
+          success: true
+        });
       })
       .then(null, $error(res));
   }

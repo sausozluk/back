@@ -32,16 +32,25 @@ module.exports = {
             "message": "yanlış e-posta/şifre"
           });
         } else {
-          if (user.active) {
-            cache.user = user;
+          if (user.banned) {
+            res.json({
+              "success": false,
+              "message": "kovuldun"
+            });
+          }
 
-            return users$.getUserUnseenMessage(user._id);
-          } else {
+          if (!user.active) {
             res.json({
               "success": false,
               "message": "aktif değilsin? belki de pasifsin ;)"
             });
+
+            return;
           }
+
+          cache.user = user;
+
+          return users$.getUserUnseenMessage(user._id);
         }
       })
       .then(function (count) {

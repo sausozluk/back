@@ -6,9 +6,9 @@ module.exports = {
     var id = req.params.id;
 
     Entry
-      .findOne({id: id, user: req.user_mdl._id})
+      .findOne({id: id})
       .then(function (entry) {
-        if (entry) {
+        if (entry && (entry.user === req.user_mdl._id || req.user.permission > $enum("user.permission.USER"))) {
           Topic.findOneAndUpdate({entries: entry._id}, {$pull: {entries: entry._id}})
             .then(function (topic) {
               if (topic.entries.length === 1) {
@@ -223,9 +223,9 @@ module.exports = {
     var text = req.body.text;
 
     Entry
-      .findOne({id: id, user: req.user_mdl._id})
+      .findOne({id: id})
       .then(function (entry) {
-        if (entry) {
+        if (entry && (entry.user === req.user_mdl._id || req.user.permission > $enum("user.permission.USER"))) {
           return Entry.update({id: id}, {text: text});
         } else {
           res.json({

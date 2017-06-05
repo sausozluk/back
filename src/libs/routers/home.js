@@ -44,5 +44,5 @@ module.exports = function (app) {
    *       }
    *     }
    */
-  app.get("/online", admin, routers["home"].online);
+  app.get("/online", secure, admin, routers["home"].online);
 };

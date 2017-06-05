@@ -89,6 +89,8 @@ var User = new mongoose.Schema({
     }
   },
   "active": {type: Boolean, default: false},
+  "banned": {type: Boolean, default: false},
+  "moderation": [String],
   generation: {
     type: String,
     trim: true

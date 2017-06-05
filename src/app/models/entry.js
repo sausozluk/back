@@ -8,6 +8,7 @@ var Entry = new mongoose.Schema({
   topic: {type: ObjectId, ref: 'Topic', required: true},
   up: [{type: ObjectId}],
   down: [{type: ObjectId}],
+  moderation: [String],
   text: {type: String, required: true, trim: true}
 }, {
   collection: "entries",

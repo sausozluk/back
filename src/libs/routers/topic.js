@@ -114,4 +114,5 @@ module.exports = function (app) {
    *     }
    */
   app.get("/topics/:id", routers["topic"].fetch);
+  app.put("/topics/:id", giffMe("body", ["title"]), secure, moderator, routers["topic"].update);
 };

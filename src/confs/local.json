@@ -1,5 +1,5 @@
 {
-  "mongo_uri": "mongodb://localhost:27017/sozluk",
+  "mongo_uri": "mongodb://db:27017/sozluk",
   "mail": {
     "user": "",
     "smtp": "",

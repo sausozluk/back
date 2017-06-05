@@ -96,6 +96,17 @@ module.exports = {
         likedTask],
       function (err, data) {
         data.username = this.user.username;
+
+        if (this.user.banned) {
+          data.status = "bu kalpten kovuldu";
+        } else if (this.user.permission === $enum("user.permission.MOD")) {
+          data.status = "öğretmen çocuğu";
+        } else if (this.user.permission === $enum("user.permission.ADMIN")) {
+          data.status = "yetkili biri";
+        } else {
+          data.status = "yazar";
+        }
+
         res.json({
           success: true,
           data: data
@@ -117,7 +128,7 @@ module.exports = {
           res.json({
             success: false,
             message: "böyle bi yazar yok"
-          })
+          });
         }
       })
       .then(null, $error(res));
@@ -231,6 +242,44 @@ module.exports = {
             message: "bulamadım sori"
           });
         }
+      })
+      .then(null, $error(res));
+  },
+  banWithSlug: function (req, res) {
+    User.findOne({slug: req.params.slug})
+      .then(function (user) {
+        if (user) {
+          user.banned = true;
+          user.moderation.push("BAN," + req.user_mdl.username + "," + new Date().getTime());
+          return user.save();
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bi yazar yok"
+          });
+        }
+      })
+      .then(function () {
+        res.json({success: true});
+      })
+      .then(null, $error(res));
+  },
+  unbanWithSlug: function (req, res) {
+    User.findOne({slug: req.params.slug})
+      .then(function (user) {
+        if (user) {
+          user.banned = false;
+          user.moderation.push("UNBAN," + req.user_mdl.username + "," + new Date().getTime());
+          return user.save();
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bi yazar yok"
+          });
+        }
+      })
+      .then(function () {
+        res.json({success: true});
       })
       .then(null, $error(res));
   }
