@@ -250,6 +250,7 @@ module.exports = {
       .then(function (user) {
         if (user) {
           user.banned = true;
+          user.tokens = [];
           user.moderation.push("BAN," + req.user_mdl.username + "," + new Date().getTime());
           return user.save();
         } else {
@@ -269,7 +270,48 @@ module.exports = {
       .then(function (user) {
         if (user) {
           user.banned = false;
+          user.tokens = [];
           user.moderation.push("UNBAN," + req.user_mdl.username + "," + new Date().getTime());
+          return user.save();
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bi yazar yok"
+          });
+        }
+      })
+      .then(function () {
+        res.json({success: true});
+      })
+      .then(null, $error(res));
+  },
+  modWithSlug: function (req, res) {
+    User.findOne({slug: req.params.slug})
+      .then(function (user) {
+        if (user) {
+          user.permission = $enum("user.permission.MOD");
+          user.tokens = [];
+          user.moderation.push("MOD," + req.user_mdl.username + "," + new Date().getTime());
+          return user.save();
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bi yazar yok"
+          });
+        }
+      })
+      .then(function () {
+        res.json({success: true});
+      })
+      .then(null, $error(res));
+  },
+  unmodWithSlug: function (req, res) {
+    User.findOne({slug: req.params.slug})
+      .then(function (user) {
+        if (user) {
+          user.permission = $enum("user.permission.USER");
+          user.tokens = [];
+          user.moderation.push("UNMOD," + req.user_mdl.username + "," + new Date().getTime());
           return user.save();
         } else {
           res.json({

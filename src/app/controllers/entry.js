@@ -4,11 +4,12 @@ var Topic = $('Topic');
 module.exports = {
   remove: function (req, res) {
     var id = req.params.id;
+    var isPowerful = req.user.permission > $enum("user.permission.USER");
 
     Entry
       .findOne({id: id})
       .then(function (entry) {
-        if (entry && (entry.user === req.user_mdl._id || req.user.permission > $enum("user.permission.USER"))) {
+        if (entry && (entry.user === req.user_mdl._id || isPowerful)) {
           Topic.findOneAndUpdate({entries: entry._id}, {$pull: {entries: entry._id}})
             .then(function (topic) {
               if (topic.entries.length === 1) {
@@ -221,11 +222,12 @@ module.exports = {
   update: function (req, res) {
     var id = req.params.id;
     var text = req.body.text;
+    var isPowerful = req.user.permission > $enum("user.permission.USER");
 
     Entry
       .findOne({id: id})
       .then(function (entry) {
-        if (entry && (entry.user === req.user_mdl._id || req.user.permission > $enum("user.permission.USER"))) {
+        if (entry && (entry.user === req.user_mdl._id || isPowerful)) {
           return Entry.update({id: id}, {text: text});
         } else {
           res.json({

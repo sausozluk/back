@@ -30,8 +30,7 @@ var Topic = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
-  "entries": [{type: ObjectId, ref: 'Entry'}],
-  moderation: [String]
+  "entries": [{type: ObjectId, ref: 'Entry'}]
 }, {
   collection: "topics",
   minimize: false,
