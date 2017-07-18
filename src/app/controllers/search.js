@@ -54,6 +54,7 @@ module.exports = {
     var regex = new RegExp(q, 'i');
 
     User.find({username: regex})
+      .limit(10)
       .then(function (users) {
         res.json({
           success: true,
