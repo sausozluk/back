@@ -10,7 +10,6 @@ module.exports = function () {
     }
 
     if (err) {
-      $mail($hostname + " # " + err.message, err.stack);
       $logger.error(err.stack);
     }
 
