@@ -227,7 +227,7 @@ module.exports = {
     Entry
       .findOne({id: id})
       .then(function (entry) {
-        if (entry && (entry.user === req.user_mdl._id || isPowerful)) {
+        if (entry && (entry.user.toString() === req.user_mdl._id.toString() || isPowerful)) {
           return Entry.update({id: id}, {text: text});
         } else {
           res.json({
