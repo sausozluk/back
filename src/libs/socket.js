@@ -54,9 +54,6 @@ module.exports = function (server, next) {
     ws.on("close", function () {
       $logger.info(slug, 'connection lost');
       delete global.clients[slug][ws.__data.token];
-      if (!Object.keys(global.clients[slug]).length) {
-        delete global.clients[slug];
-      }
     });
   };
 
