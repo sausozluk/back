@@ -10,7 +10,7 @@ module.exports = {
     res.json({
       success: true,
       data: {
-        online: _.map(global.clients || [], "__data.username")
+        online: Object.keys(global.clients)
       }
     })
   },

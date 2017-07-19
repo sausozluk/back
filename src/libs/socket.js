@@ -1,6 +1,8 @@
 var users$ = require(__dirname + '/../app/services/users');
 var chats$ = require(__dirname + '/../app/services/chats');
 
+var uuid = require('uuid/v4');
+
 var wss = new require("ws").Server;
 
 module.exports = function (server, next) {
@@ -53,7 +55,7 @@ module.exports = function (server, next) {
 
     ws.on("close", function () {
       $logger.info(slug, 'connection lost');
-      delete global.clients[slug][ws.__data.token];
+      delete global.clients[slug][ws.uuid];
     });
   };
 
@@ -67,12 +69,13 @@ module.exports = function (server, next) {
         .then(function (user) {
           user.token = token;
           ws.__data = user;
+          ws.uuid = uuid();
 
           if (!global.clients.hasOwnProperty(user.slug)) {
             global.clients[user.slug] = {};
           }
 
-          global.clients[user.slug][token] = ws;
+          global.clients[user.slug][ws.uuid] = ws;
 
           $logger.info(user.slug, 'connected!');
           __defineEvents(ws, user.slug);

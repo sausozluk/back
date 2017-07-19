@@ -1,5 +1,6 @@
 require('dotenv').config();
 var sozluk_env = process.env['SOZLUK_ENV'] || 'local';
+global.$isProd = sozluk_env === 'prod';
 global.$env_config = require(__dirname + '/confs/' + sozluk_env);
 
 global.$uptime = new Date().getTime();
