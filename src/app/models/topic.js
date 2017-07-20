@@ -19,7 +19,13 @@ var Topic = new mongoose.Schema({
     trim: true,
     validate: {
       validator: function (v) {
-        return v.trim().length && v.trim().length < 51 && /^[a-zA-Z $0-9ığüşöçİĞÜŞÖÇ.-]+$/.test(v);
+        var v_b = v.replace(new RegExp('\'', 'g'), '');
+
+        if (v_b === '') {
+          return false;
+        }
+
+        return v.trim().length && v.trim().length < 51 && /^[a-zA-Z $0-9ığüşöçİĞÜŞÖÇ.']+$/.test(v);
       },
       message: "bu konuyla bi yere varamazsın"
     }
