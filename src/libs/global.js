@@ -7,5 +7,6 @@ module.exports = {
   mail: $env_config['mail'],
   randomCount: 5,
   ids: ['entries_inc', 'topics_inc'],
-  site: "http://sausozluk.net"
+  site: "http://sausozluk.net",
+  chatLimit: 20
 };

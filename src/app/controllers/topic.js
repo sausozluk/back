@@ -266,11 +266,17 @@ module.exports = {
   update: function (req, res) {
     var id = req.params.id;
     var title = req.body.title;
+    var new_slug = slug(title);
 
-    Topic.update({id: id}, {title: title, slug: slug(title)})
+    Topic.update({id: id}, {title: title, slug: new_slug}, {runValidators: true})
       .then(function () {
         res.json({
-          success: true
+          success: true,
+          data: {
+            id: id,
+            title: title,
+            slug: new_slug
+          }
         });
       })
       .then(null, $error(res));
