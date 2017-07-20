@@ -69,6 +69,7 @@ module.exports = {
 
 
     var count = parseInt(req.query.count && req.query.count ? req.query.count : 25);
+    var pageCount = 10;
     var timestamp = req.query.timestamp ? req.query.timestamp : end;
 
     var results = [];
@@ -125,7 +126,8 @@ module.exports = {
               title: topic.title,
               count: i,
               updated_at: topic.updatedAt,
-              created_at: topic.createdAt
+              created_at: topic.createdAt,
+              page: Math.ceil(topic.entries.length / pageCount)
             });
           });
 
