@@ -26,20 +26,30 @@ module.exports = {
         .then(null, $error(res));
     };
 
-    var lastEntriesTask = function (next) {
+    var entryCountTask = function (next) {
+      Entry.count({user: this.user._id})
+        .then(function (count) {
+          next(null, {
+            entry_count: count
+          });
+        })
+        .then(null, $error(res));
+    };
+
+    var lastEntriesTask = function (data, next) {
       Entry.find({user: this.user._id})
         .sort({createdAt: -1})
         .limit(10)
         .populate('topic')
         .then(function (entries) {
-          next(null, {
-            last_entries: _.map(entries, function (entry) {
-              return {
-                id: entry.id,
-                title: entry.topic.title
-              };
-            })
+          data.last_entries = _.map(entries, function (entry) {
+            return {
+              id: entry.id,
+              title: entry.topic.title
+            };
           });
+
+          next(null, data);
         }).then(null, $error(res));
     };
 
@@ -91,6 +101,7 @@ module.exports = {
     };
 
     async.waterfall([userTask,
+        entryCountTask,
         lastEntriesTask,
         mostLikedTask,
         likedTask],
