@@ -9,7 +9,7 @@ module.exports = {
     Entry
       .findOne({id: id})
       .then(function (entry) {
-        if (entry && (entry.user === req.user_mdl._id || isPowerful)) {
+        if (entry && (entry.user.toString() === req.user_mdl._id.toString() || isPowerful)) {
           Topic.findOneAndUpdate({entries: entry._id}, {$pull: {entries: entry._id}})
             .then(function (topic) {
               if (topic.entries.length === 1) {
