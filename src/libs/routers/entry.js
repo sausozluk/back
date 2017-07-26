@@ -33,6 +33,7 @@ module.exports = function (app) {
    *     }
    */
   app.post("/entries", giffMe("body", ["topic_id", "text"]), secure, time(0.5), routers["entry"].create);
+  app.get("/entries/:id/votes", routers["entry"].fetchVotes);
   /**
    * @api {get} /entries/:id Get Entry
    * @apiName GetEntry

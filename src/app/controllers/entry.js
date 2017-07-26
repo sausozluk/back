@@ -63,6 +63,26 @@ module.exports = {
       })
       .then(null, $error(res));
   },
+  fetchVotes: function (req, res) {
+    var id = req.params.id;
+
+    Entry.findOne({id: id}, 'up ')
+      .populate("up", "username slug")
+      .then(function (entry) {
+        if (entry) {
+          res.json({
+            success: true,
+            data: entry
+          });
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bir entry yok"
+          });
+        }
+      })
+      .then(null, $error(res));
+  },
   fetch: function (req, res) {
     var id = req.params.id;
 
@@ -140,6 +160,11 @@ module.exports = {
               query['$pull'] = {
                 down: req.user_mdl._id
               };
+            } else if (entry.up.indexOf(req.user_mdl._id) > -1 &&
+              entry.down.indexOf(req.user_mdl._id) === -1) {
+              query['$pull'] = {
+                up: req.user_mdl._id
+              };
             }
 
             Entry.update({id: id}, query)
@@ -192,6 +217,11 @@ module.exports = {
 
               query['$pull'] = {
                 up: req.user_mdl._id
+              };
+            } else if (entry.down.indexOf(req.user_mdl._id) > -1 &&
+              entry.up.indexOf(req.user_mdl._id) === -1) {
+              query['$pull'] = {
+                down: req.user_mdl._id
               };
             }
 
