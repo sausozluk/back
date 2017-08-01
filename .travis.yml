@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 6.10.3
+- 8.2.1
 services:
 - docker
 - mongodb
@@ -29,7 +29,6 @@ before_install:
 deploy:
   provider: script
   skip_cleanup: true
-  script: cd .. && chmod 600 deploy_key && ssh -o StrictHostKeyChecking=no -i deploy_key
-    ubuntu@ec2-35-157-80-0.eu-central-1.compute.amazonaws.com "cd sozluk && ./deploy.sh"
+  script: cd .. && chmod 400 deploy_key && ssh -o StrictHostKeyChecking=no -i deploy_key -p 2222 ubuntu@sausozluk.net "cd sozluk && ./deploy.sh"
   on:
     branch: master
