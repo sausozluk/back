@@ -53,6 +53,37 @@ module.exports = {
         }).then(null, $error(res));
     };
 
+    var mostHatedTask = function (data, next) {
+      Entry.aggregate([{
+        $match: {
+          user: this.user._id
+        }
+      }, {
+        "$project": {
+          "id": 1,
+          "topic": 1,
+          "length": {"$size": "$down"}
+        }
+      }, {"$sort": {"length": -1}}, {"$limit": 5}])
+        .exec()
+        .then(function (entries) {
+          return Entry.populate(entries, {path: 'topic'});
+        })
+        .then(function (entries) {
+          data.most_hated = entries
+            .filter(function (entry) {
+              return entry.length;
+            }).map(function (entry) {
+              return {
+                id: entry.id,
+                title: entry.topic.title
+              };
+            });
+          next(null, data);
+        })
+        .then(null, $error(res));
+    };
+
     var mostLikedTask = function (data, next) {
       Entry.aggregate([{
         $match: {
@@ -104,16 +135,17 @@ module.exports = {
         entryCountTask,
         lastEntriesTask,
         mostLikedTask,
+        mostHatedTask,
         likedTask],
       function (err, data) {
         data.username = this.user.username;
 
         if (this.user.banned) {
-          data.status = "bu kalpten kovuldu";
+          data.status = "banlandı";
         } else if (this.user.permission === $enum("user.permission.MOD")) {
-          data.status = "öğretmen çocuğu";
+          data.status = "mod";
         } else if (this.user.permission === $enum("user.permission.ADMIN")) {
-          data.status = "yetkili biri";
+          data.status = "admin";
         } else {
           data.status = "yazar";
         }
