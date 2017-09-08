@@ -131,15 +131,6 @@ module.exports = {
               created_at: topic.createdAt,
               page: Math.ceil(topic.entries.length / pageCount)
             });
-
-            results.sort(function (a, b) {
-              if (!a.count && b.count)
-                return 1;
-              else if (!b.count && a.count)
-                return -1;
-              else
-                return 0;
-            });
           });
 
           next(null);
