@@ -10,7 +10,6 @@ module.exports = {
 
     var findUsersTask = function (next) {
       User.find({username: regex})
-        .limit(3)
         .then(function (users) {
           next(null, _.map(users, function (user) {
             return {
@@ -24,7 +23,6 @@ module.exports = {
 
     var findTopicsTask = function (users, next) {
       Topic.find({title: regex})
-        .limit(7)
         .then(function (topics) {
           next(null, users, _.map(topics, function (topic) {
             return {

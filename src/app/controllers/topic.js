@@ -96,7 +96,9 @@ module.exports = {
 
     var getTodayEntriesTask = function (next) {
       Entry
-        .find({"createdAt": {"$gte": start, "$lt": timestamp}})
+        .find({
+          "createdAt": {"$gte": start, "$lt": timestamp}
+        })
         .then(function (entries) {
           next(null, entries);
         })
@@ -128,6 +130,15 @@ module.exports = {
               updated_at: topic.updatedAt,
               created_at: topic.createdAt,
               page: Math.ceil(topic.entries.length / pageCount)
+            });
+
+            results.sort(function (a, b) {
+              if (!a.count && b.count)
+                return 1;
+              else if (!b.count && a.count)
+                return -1;
+              else
+                return 0;
             });
           });
 
