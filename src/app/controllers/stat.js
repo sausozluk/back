@@ -25,12 +25,16 @@ module.exports = {
         select: 'username slug -_id'
       });
     }).then(function (results) {
-      res.json(_.map(results, function (result) {
+      var data = _.map(results, function (result) {
         return {
           user: {username: result._id.username, slug: result._id.slug},
           entry_count: result.count
         }
-      }));
+      });
+      res.json({
+        success: true,
+        data: data
+      });
     }).then(null, $error(res));
   }
 };
