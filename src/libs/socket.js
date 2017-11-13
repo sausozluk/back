@@ -58,7 +58,7 @@ module.exports = function (server, next) {
     });
 
     ws.on("close", function () {
-      $logger.info(slug, 'connection lost');
+      console.log(slug, 'connection lost');
       delete global.clients[slug][ws.uuid];
     });
   };
@@ -81,7 +81,7 @@ module.exports = function (server, next) {
 
           global.clients[user.slug][ws.uuid] = ws;
 
-          $logger.info(user.slug, 'connected!');
+          console.log(user.slug, 'connected!');
           __defineEvents(ws, user.slug);
         })
         .catch(function () {

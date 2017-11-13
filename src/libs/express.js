@@ -21,8 +21,7 @@ module.exports = function (next) {
   app.use(cookieParser());
   app.use(bodyParser.json({limit: "50mb"}));
   app.use(bodyParser.urlencoded({limit: "50mb", extended: true}));
-  app.use(morgan("combined", {stream: $logger._stream}));
-  app.use(utils.responseHandler);
+  app.use(morgan("combined"));
   require(__dirname + "/security");
   require(__dirname + "/router")(router);
   app.use("/api/v1", router);

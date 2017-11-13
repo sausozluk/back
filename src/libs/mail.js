@@ -34,9 +34,9 @@ module.exports = {
         attachment: [{data: message, alternative: true}]
       }, function (err, message) {
         if (err) {
-          $logger.error("[MAIL] error", err);
+          console.error("[MAIL] error", err);
         } else {
-          $logger.info("[MAIL]", message.header.to);
+          console.log("[MAIL]", message.header.to);
         }
       });
     }

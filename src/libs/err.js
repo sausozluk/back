@@ -4,17 +4,17 @@ module.exports = function () {
   var exitHandler = function (options, err) {
     if (options.cleanup) {
       mongoose.disconnect(function () {
-        $logger.info("[APP]", "down :<");
+        console.log("[APP]", "Exit.");
         process.exit();
       });
     }
 
     if (err) {
-      $logger.error(err.stack);
+      console.error(err.stack);
     }
 
     if (options.exit) {
-      $logger.info("[APP]", "nooooooo (like luke)");
+      console.log("[APP]", "Dropping.");
       process.exit();
     }
   };

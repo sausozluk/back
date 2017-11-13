@@ -41,29 +41,15 @@ module.exports = {
 
     return online;
   },
-  "responseHandler": function (req, res, next) {
-    $logger.info(
-      "[REQ]",
-      Object.keys(req.body).length ? colors.inverse(JSON.stringify(req.body)) : "[EMPTY]", !!req.headers.token ? req.headers.token : "[NO TOKEN]"
-    );
-    /*
-    var send = res.send;
-    res.send = function (string) {
-      $logger.info("[RES]", string);
-      send.call(this, string);
-    };
-    */
-    next();
-  },
   "expressUp": function (port, next) {
     return function () {
-      $logger.info("[HTTP]", "up on", port);
+      console.log("[HTTP]", port);
       next();
     };
   },
   "dbErrorHandler": function (res) {
     return function (err) {
-      $logger.error(err);
+      console.error(err);
       res.json({
         success: false,
         message: err.toString()

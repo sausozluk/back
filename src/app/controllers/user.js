@@ -370,5 +370,17 @@ module.exports = {
         res.json({success: true});
       })
       .then(null, $error(res));
+  },
+  logoutFromEverything: function (req, res) {
+    var user = req.user_mdl;
+    user.tokens = [];
+
+    user.save()
+      .then(function () {
+        res.json({
+          "success": true
+        });
+      })
+      .then(null, $error(res));
   }
 };

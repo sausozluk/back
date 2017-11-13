@@ -12,17 +12,13 @@ module.exports = function (next) {
   global.mongoose.connect($config.db);
 
   mongoose.connection.on("error", function (err) {
-    $logger.error("[DB] error:", err.message);
-  });
-
-  mongoose.connection.on("disconnected", function () {
-    $logger.info("[DB] down.");
+    console.error("[DB] Error:", err.message);
   });
 
   mongoose.connection.on("connected", function () {
-    $logger.info("[DB] up");
+    console.log("[DB] Ready.");
     next();
-    idm(); // make some id
+    idm();
   });
 
   fs.readdirSync(path).forEach(function (file) {

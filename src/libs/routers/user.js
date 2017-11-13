@@ -33,6 +33,7 @@ module.exports = function (app) {
   app.get("/users/unban/:slug", secure, admin, routers["user"].unbanWithSlug);
   app.get("/users/mod/:slug", secure, admin, routers["user"].modWithSlug);
   app.get("/users/unmod/:slug", secure, admin, routers["user"].unmodWithSlug);
+  app.get("/users/exit/:slug", secure, routers["user"].logoutFromEverything);
   app.get("/users/activate-mail/:token", routers["user"].activateMail);
   /**
    * @api {get} /users/:slug Get User With Slug
