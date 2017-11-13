@@ -19,7 +19,11 @@ module.exports = function (server, next) {
       var targets = global.clients[slug];
       for (var i in targets) {
         if (targets.hasOwnProperty(i)) {
-          targets[i].send(JSON.stringify(data));
+          try {
+            targets[i].send(JSON.stringify(data));
+          } catch (e) {
+            // skip
+          }
         }
       }
     }
@@ -32,6 +36,8 @@ module.exports = function (server, next) {
       var data = req.data;
 
       if (req.action === 'send_message') {
+        chats$.sendMessage(user, data.to, data.message);
+
         /**
          * {action: send_message, data: {to: target_slug, message: message_content}}
          */
@@ -43,8 +49,6 @@ module.exports = function (server, next) {
             message: data.message
           }
         });
-
-        chats$.sendMessage(user, data.to, data.message);
       } else if (req.action === 'mark_messages') {
         /**
          * {action: mark_messages, data: {to: target_slug}}

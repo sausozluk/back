@@ -26,6 +26,21 @@ module.exports = {
       }
     };
   },
+  "getOnlineUsers": function () {
+    var online = [];
+
+    for (var slug in global.clients) {
+      if (global.clients.hasOwnProperty(slug)) {
+        var user = global.clients[slug];
+
+        if (Object.keys(user).length) {
+          online.push(slug);
+        }
+      }
+    }
+
+    return online;
+  },
   "responseHandler": function (req, res, next) {
     $logger.info(
       "[REQ]",

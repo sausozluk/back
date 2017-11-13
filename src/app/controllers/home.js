@@ -1,5 +1,5 @@
-var _ = require('lodash');
 var User = $('User');
+var utils = require(__dirname + '/../../libs/utils');
 
 module.exports = {
   index: function (req, res) {
@@ -11,9 +11,17 @@ module.exports = {
     res.json({
       success: true,
       data: {
-        online: Object.keys(global.clients)
+        online: utils.getOnlineUsers()
       }
     })
+  },
+  isOnline: function (req, res) {
+    var slug = req.params.slug;
+
+    res.json({
+      success: true,
+      data: utils.getOnlineUsers().indexOf(slug) > -1
+    });
   },
   status: function (req, res) {
     res.json({
