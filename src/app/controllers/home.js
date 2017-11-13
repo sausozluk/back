@@ -15,14 +15,6 @@ module.exports = {
       }
     })
   },
-  isOnline: function (req, res) {
-    var slug = req.params.slug;
-
-    res.json({
-      success: true,
-      data: utils.getOnlineUsers().indexOf(slug) > -1
-    });
-  },
   status: function (req, res) {
     res.json({
       success: true,

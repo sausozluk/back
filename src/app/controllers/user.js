@@ -5,6 +5,7 @@ var _ = require("lodash");
 var async = require("async");
 var sha512 = require("js-sha512").sha512;
 var randomToken = require("rand-token");
+var utils = require(__dirname + "/../../libs/utils");
 
 module.exports = {
   getProfileWithSlug: function (req, res) {
@@ -149,6 +150,8 @@ module.exports = {
         } else {
           data.status = "yazar";
         }
+
+        data.online = utils.getOnlineUsers().indexOf(slug) > -1;
 
         res.json({
           success: true,
