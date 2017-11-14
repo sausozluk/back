@@ -74,7 +74,7 @@ module.exports = {
       .then(null, $error(res));
   },
   newUsers: function (req, res) {
-    User.find({}, 'username slug').sort('-created_at').limit(10)
+    User.find({}, 'username slug created_at').sort('created_at').limit(10)
       .then(function (users) {
         res.json({
           success: true,
