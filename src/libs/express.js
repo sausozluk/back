@@ -2,7 +2,6 @@ var utils = require(__dirname + "/utils");
 var express = require("express");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
-var morgan = require("morgan");
 var cors = require("cors");
 var helmet = require("helmet");
 var http = require("http");
@@ -21,7 +20,6 @@ module.exports = function (next) {
   app.use(cookieParser());
   app.use(bodyParser.json({limit: "50mb"}));
   app.use(bodyParser.urlencoded({limit: "50mb", extended: true}));
-  app.use(morgan("combined"));
   require(__dirname + "/security");
   require(__dirname + "/router")(router);
   app.use("/api/v1", router);
