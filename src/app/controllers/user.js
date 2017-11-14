@@ -151,7 +151,7 @@ module.exports = {
           data.status = "yazar";
         }
 
-        var inOnlineObj = utils.getOnlineUsers
+        var inOnlineObj = utils.getOnlineUsers()
           .find((function (item) {
             return item.slug === slug;
           }));
