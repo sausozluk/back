@@ -6,7 +6,7 @@
     "test": "cd .. && npm test"
   },
   "dependencies": {
-    "async": "^2.1.4",
+    "async": "^2.6.0",
     "body-parser": "1.15.0",
     "colors": "1.0.3",
     "cookie-parser": "1.4.1",

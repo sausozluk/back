@@ -10,9 +10,7 @@ module.exports = {
   online: function (req, res) {
     res.json({
       success: true,
-      data: {
-        online: utils.getOnlineUsers()
-      }
+      data: utils.getOnlineUsers()
     })
   },
   status: function (req, res) {
