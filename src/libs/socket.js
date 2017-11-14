@@ -4,7 +4,9 @@ var chats$ = require(__dirname + '/../app/services/chats');
 var uuid = require('uuid/v4');
 
 module.exports = function (server, next) {
-  var io = require('socket.io').listen(server);
+  var io = require('socket.io')(server, {
+    path: '/service/ws'
+  });
 
   global.clients = {};
 
