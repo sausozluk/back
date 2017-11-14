@@ -33,8 +33,17 @@ module.exports = {
       if (global.clients.hasOwnProperty(slug)) {
         var user = global.clients[slug];
 
-        if (Object.keys(user).length) {
-          online.push(slug);
+        for (var uuid in user) {
+          if (user.hasOwnProperty(uuid)) {
+            var ws = user[uuid];
+
+            online.push({
+              slug: slug,
+              username: ws.__data.username
+            });
+
+            break;
+          }
         }
       }
     }
