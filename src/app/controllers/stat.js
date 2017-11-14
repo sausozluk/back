@@ -72,5 +72,15 @@ module.exports = {
         })
       })
       .then(null, $error(res));
+  },
+  newUsers: function (req, res) {
+    User.find({}, 'username slug').sort('-created_at').limit(10)
+      .then(function (users) {
+        res.json({
+          success: true,
+          data: users
+        });
+      })
+      .then(null, $error(res));
   }
 };
