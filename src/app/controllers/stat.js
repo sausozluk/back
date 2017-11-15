@@ -74,6 +74,49 @@ module.exports = {
       })
       .then(null, $error(res));
   },
+  mostUpVotedUsers: function (req, res) {
+    Entry.aggregate([
+      {
+        "$project": {
+          "like_count": {"$size": "$up"},
+          "user": 1
+        }
+      },
+      {
+        $match: {
+          like_count: {
+            $gt: 0
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$user',
+          count: {$sum: '$like_count'}
+        }
+      },
+      {
+        $sort: {
+          count: -1
+        }
+      },
+      {
+        $limit: 10
+      }
+    ]).exec()
+      .then(function (results) {
+        return User.populate(results, {
+          path: '_id',
+          select: 'username slug -_id'
+        }).then(function (results) {
+          res.json({
+            success: true,
+            data: results
+          })
+        });
+      })
+      .then(null, $error(res));
+  },
   newUsers: function (req, res) {
     User.find({}, 'username slug createdAt').sort('-createdAt').limit(10)
       .then(function (users) {
@@ -140,15 +183,16 @@ module.exports = {
         .then(null, $error(res));
     };
 
-    async.waterfall([getEntryCount,
+    async.waterfall([
+      getEntryCount,
       getUserCount,
       getTopicCount,
-      mostActiveTopic],
-      function (err, data) {
-        res.json({
-          success: true,
-          data: data
-        });
+      mostActiveTopic
+    ], function (err, data) {
+      res.json({
+        success: true,
+        data: data
       });
+    });
   }
 };
