@@ -2,6 +2,7 @@ var _ = require('lodash');
 var Entry = $('Entry');
 var User = $('User');
 var Topic = $('Topic');
+var async = require('async');
 
 module.exports = {
   mostWriterUsers: function (req, res) {
@@ -82,5 +83,72 @@ module.exports = {
         });
       })
       .then(null, $error(res));
+  },
+  general: function (req, res) {
+    var getEntryCount = function (next) {
+      Entry.count({})
+        .then(function (count) {
+          next(null, {
+            entry_count: count
+          });
+        })
+        .then(null, $error(res));
+    };
+
+    var getUserCount = function (data, next) {
+      User.count({})
+        .then(function (count) {
+          data.user_count = count;
+          next(null, data);
+        })
+        .then(null, $error(res));
+    };
+
+    var getTopicCount = function (data, next) {
+      Topic.count({})
+        .then(function (count) {
+          data.topic_count = count;
+          next(null, data);
+        })
+        .then(null, $error(res));
+    };
+
+    var mostActiveTopic = function (data, next) {
+      Topic.aggregate([
+        {
+          "$project": {
+            "entry_count": {"$size": "$entries"},
+            "slug": 1,
+            "title": 1,
+            "id": 1
+          }
+        },
+        {
+          $match: {entry_count: {$gt: 0}}
+        },
+        {"$sort": {"entry_count": -1}},
+        {"$limit": 1}
+      ]).exec()
+        .then(function (topics) {
+          if (topics.length) {
+            data.active_topic = topics[0];
+            next(null, data)
+          } else {
+            data.active_topic = null;
+          }
+        })
+        .then(null, $error(res));
+    };
+
+    async.waterfall([getEntryCount,
+      getUserCount,
+      getTopicCount,
+      mostActiveTopic],
+      function (err, data) {
+        res.json({
+          success: true,
+          data: data
+        });
+      });
   }
 };

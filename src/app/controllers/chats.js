@@ -39,18 +39,17 @@ module.exports = {
   inbox: function (req, res) {
     var me = req.user_mdl._id;
 
-    Chat.aggregate([{
-      $match: {users: me}
-    }, {
-      "$project": {
-        "length": {"$size": "$messages"},
-        "messages": {"$slice": ["$messages", -1]},
-        "updatedAt": 1,
-        "users": 1
-      }
-    },
-      {"$sort": {"updatedAt": -1}},
-      {"$limit": 10}
+    Chat.aggregate([
+      {$match: {users: me}},
+      {
+        "$project": {
+          "length": {"$size": "$messages"},
+          "messages": {"$slice": ["$messages", -1]},
+          "updatedAt": 1,
+          "users": 1
+        }
+      },
+      {"$sort": {"updatedAt": -1}}
     ])
       .exec()
       .then(function (chats) {
