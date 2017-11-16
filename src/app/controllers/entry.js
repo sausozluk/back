@@ -46,6 +46,8 @@ module.exports = {
               return Topic.update({id: topic_id}, {$push: {entries: entry._id}})
             })
             .then(function () {
+              $activity.create_entry(req.user_mdl.username, req.user_mdl.slug, entry.id);
+
               res.json({
                 success: true,
                 data: {

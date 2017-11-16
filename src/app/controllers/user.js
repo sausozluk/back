@@ -382,6 +382,8 @@ module.exports = {
 
     user.save()
       .then(function () {
+        $activity.logout(user.username, user.slug);
+
         res.json({
           "success": true
         });

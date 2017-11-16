@@ -60,6 +60,8 @@ module.exports = {
           return user
             .save()
             .then(function () {
+              $activity.login(user.username, user.slug);
+
               res.json({
                 "success": true,
                 "data": $out.successLogin(user, count)
@@ -126,8 +128,14 @@ module.exports = {
       .then(function () {
         if (cache.user) {
           var user = cache.user;
+
           $mail.activation(user.username, user.keys.activation, user.email);
-          res.json({"success": true});
+
+          $activity.register(user.username, user.slug);
+
+          res.json({
+            "success": true
+          });
         }
       })
       .then(null, $error(res));
@@ -178,6 +186,8 @@ module.exports = {
 
     user.save()
       .then(function () {
+        $activity.logout(user.username, user.slug);
+
         res.json({
           "success": true
         });
