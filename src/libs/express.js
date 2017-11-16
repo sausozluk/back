@@ -13,6 +13,7 @@ var server = http.createServer(app);
 var port = $config.port;
 
 global.$error = utils.dbErrorHandler;
+global.$activity = require(__dirname + "/activity");
 
 module.exports = function (next) {
   app.use(helmet());

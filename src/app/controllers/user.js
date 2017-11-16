@@ -140,6 +140,7 @@ module.exports = {
         likedTask],
       function (err, data) {
         data.username = this.user.username;
+        data.last_activities = this.user.activities || [];
 
         if (this.user.banned) {
           data.status = "banlandı";

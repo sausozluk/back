@@ -34,7 +34,7 @@ module.exports = {
           .then(function () {
             Topic.update({_id: topic._id}, {$push: {entries: entry}})
               .then(function () {
-                $activity.create_topic(req.user_mdl.username, req.user_mdl.slug, topic.id, topic.slug);
+                $activity.create_topic(req.user_mdl.username, req.user_mdl.slug, topic.id, topic.slug, topic.title);
 
                 res.json({
                   success: true,

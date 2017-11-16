@@ -35,7 +35,7 @@ module.exports = {
   activities: function (req, res) {
     res.json({
       "success": true,
-      "data": (global.activities || []).slice().reverse().slice(0, 20)
+      "data": global.activities || []
     });
   },
   default: function (req, res) {

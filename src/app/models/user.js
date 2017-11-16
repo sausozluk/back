@@ -59,6 +59,11 @@ var User = new mongoose.Schema({
     }
   },
   "tokens": [String],
+  "activities": [{
+    action: {type: String, required: true},
+    data: {type: mongoose.Schema.Types.Mixed},
+    date: {type: Date, default: Date.now}
+  }],
   "keys": {
     "activation": {
       type: String,
