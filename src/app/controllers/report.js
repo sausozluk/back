@@ -9,7 +9,7 @@ module.exports = {
     Entry.findOne({id: entry})
       .then(function (entry) {
         if (entry) {
-          var report = new Report({username: user.username, entry: entry.id});
+          var report = new Report({user: user._id, entry: entry.id});
           report.save()
             .then(function () {
               res.json({
@@ -28,12 +28,32 @@ module.exports = {
   },
   fetch: function (req, res) {
     Report.find({})
+      .populate("user", "username slug")
       .sort({createdAt: -1})
       .then(function (reports) {
         res.json({
           success: true,
           data: reports
         })
+      })
+      .then(null, $error(res));
+  },
+  remove: function (req, res) {
+    var id = req.params.id;
+
+    Report
+      .findOne({id: id})
+      .then(function (entry) {
+        if (entry) {
+          entry.remove();
+
+          res.json({success: true});
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bir rapor yok"
+          })
+        }
       })
       .then(null, $error(res));
   }

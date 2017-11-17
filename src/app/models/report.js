@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 var Report = new mongoose.Schema({
-  username: {type: String, required: true},
+  user: {type: ObjectId, ref: 'User', required: true},
   entry: {type: Number, required: true}
 }, {
   collection: "reports",
