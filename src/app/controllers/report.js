@@ -42,7 +42,7 @@ module.exports = {
     var id = req.params.id;
 
     Report
-      .findOne({id: id})
+      .findOne({_id: id})
       .then(function (entry) {
         if (entry) {
           entry.remove();
