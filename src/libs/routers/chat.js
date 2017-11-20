@@ -78,4 +78,5 @@ module.exports = function (app) {
    *     }
    */
   app.get("/chats/:slug", secure, routers["chats"].chat);
+  app.delete("/chats/:slug", secure, routers["chats"].remove);
 };

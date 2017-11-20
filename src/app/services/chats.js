@@ -47,13 +47,6 @@ module.exports = {
         })
         .then(function (chat) {
           if (chat) {
-            if (chat.messages.length >= $config.chatLimit) {
-              var targetId = chat.messages[0]._id;
-              Chat.update({_id: chat._id}, {$pull: {messages: {_id: targetId}}}, {safe: true})
-                .then(function (r) {
-                });
-            }
-
             return Chat.update({_id: chat._id}, {
               $push: {
                 messages: {

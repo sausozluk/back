@@ -1,5 +1,6 @@
 var Chat = $('Chat');
 var chats$ = require(__dirname + '/../services/chats');
+var _ = require('lodash');
 
 module.exports = {
   create: function (req, res) {
@@ -36,11 +37,53 @@ module.exports = {
         })
       });
   },
+  remove: function (req, res) {
+    var from_user = req.user_mdl;
+    var to_slug = req.params.slug;
+
+    var chat_slug = [to_slug, from_user.slug].sort().join("-");
+
+    Chat
+      .findOne({slug: chat_slug})
+      .then(function (chat) {
+        if (chat) {
+          _.forEach(chat.messages, function (message) {
+            var already_deleted = message.deleted.indexOf(from_user._id) > -1;
+            if (!already_deleted) {
+              message.deleted.push(from_user);
+            }
+          });
+
+          chat.save()
+            .then(function () {
+              res.json({
+                success: true
+              });
+            });
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bi konuşma yok"
+          })
+        }
+      })
+      .then(null, $error(res));
+  },
   inbox: function (req, res) {
     var me = req.user_mdl._id;
 
     Chat.aggregate([
       {$match: {users: me}},
+      {$unwind: '$messages'},
+      {$match: {'messages.deleted': {$ne: me}}},
+      {
+        $group: {
+          '_id': '$_id',
+          'messages': {'$push': '$messages'},
+          'users': {'$first': '$users'},
+          'updatedAt': {'$first': '$updatedAt'}
+        }
+      },
       {
         "$project": {
           "length": {"$size": "$messages"},
@@ -69,6 +112,7 @@ module.exports = {
   },
   chat: function (req, res) {
     var slug = req.params.slug;
+    var me = req.user_mdl._id;
 
     if (slug === req.user_mdl.slug) {
       res.json({
@@ -82,9 +126,21 @@ module.exports = {
     var chat_slug = [slug, req.user_mdl.slug].sort().join("-");
 
     Chat
-      .findOne({slug: chat_slug})
+      .aggregate([
+        {$match: {slug: chat_slug}},
+        {$unwind: '$messages'},
+        {$match: {'messages.deleted': {$ne: me}}},
+        {
+          $group: {
+            '_id': '$_id',
+            'messages': {'$push': '$messages'}
+          }
+        }
+      ])
       .then(function (chat) {
-        if (chat) {
+        if (chat.length) {
+          chat = chat[0];
+
           chats$.markMessages(req.user_mdl._id, chat_slug)
             .then(function () {
               res.json({
