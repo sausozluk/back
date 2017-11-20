@@ -5,6 +5,8 @@ var cookieParser = require("cookie-parser");
 var cors = require("cors");
 var helmet = require("helmet");
 var http = require("http");
+var useragent = require('express-useragent');
+var requestIp = require('request-ip');
 var socket = require(__dirname + "/socket");
 
 var app = express();
@@ -14,8 +16,11 @@ var port = $config.port;
 
 global.$error = utils.dbErrorHandler;
 global.$activity = require(__dirname + "/activity");
+global.$session = require(__dirname + "/session");
 
 module.exports = function (next) {
+  app.use(requestIp.mw());
+  app.use(useragent.express());
   app.use(helmet());
   app.use(cors());
   app.use(cookieParser());

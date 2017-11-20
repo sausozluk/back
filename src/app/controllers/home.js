@@ -43,5 +43,17 @@ module.exports = {
       success: false,
       message: "yok ki"
     });
+  },
+  forceGlobalLogout: function (req, res) {
+    User
+      .updateMany({}, {$set: {tokens: []}})
+      .then(function () {
+        $session.setFalse();
+
+        res.json({
+          success: true
+        });
+      })
+      .then(null, $error(res));
   }
 };

@@ -384,6 +384,7 @@ module.exports = {
     user.save()
       .then(function () {
         $activity.logout(user.username, user.slug);
+        $session.setFalseWithUser(user._id);
 
         res.json({
           "success": true

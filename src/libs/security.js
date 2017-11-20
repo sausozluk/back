@@ -77,6 +77,23 @@ var noSecure = function (req, res, next) {
     .then(null, $error(res));
 };
 
+var opt = function (req, res, next) {
+  var token = req.headers.token || $config.jokerToken;
+
+  $("User")
+    .findOne({tokens: token})
+    .exec()
+    .then(function (user) {
+      if (user) {
+        req.user = user.toObject();
+        req.user_mdl = user;
+      }
+
+      next();
+    })
+    .then(null, $error(res));
+};
+
 var secure = function (req, res, next) {
   var token = req.headers.token || $config.jokerToken;
 
@@ -140,3 +157,4 @@ global.noSecure = noSecure;
 global.admin = admin;
 global.moderator = moderator;
 global.time = time;
+global.opt = opt;

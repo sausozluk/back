@@ -61,10 +61,12 @@ module.exports = {
             .save()
             .then(function () {
               $activity.login(user.username, user.slug);
+              var out = $out.successLogin(user, count);
+              $session.create(req, user._id, out.token);
 
               res.json({
                 "success": true,
-                "data": $out.successLogin(user, count)
+                "data": out
               });
             });
         }
@@ -187,6 +189,7 @@ module.exports = {
     user.save()
       .then(function () {
         $activity.logout(user.username, user.slug);
+        $session.setFalseWithToken(token);
 
         res.json({
           "success": true
