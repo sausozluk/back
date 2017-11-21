@@ -142,6 +142,10 @@ module.exports = {
         data.username = this.user.username;
         data.last_activities = this.user.activities || [];
 
+        if (req.user_mdl && req.user_mdl.permission > 1) {
+          data.email = this.user.email;
+        }
+
         if (this.user.banned) {
           data.status = "banlandı";
         } else if (this.user.permission === $enum("user.permission.MOD")) {

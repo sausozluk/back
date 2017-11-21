@@ -1,5 +1,5 @@
 module.exports = function (app) {
-  app.get("/users/profile/:slug", routers["user"].getProfileWithSlug);
+  app.get("/users/profile/:slug", opt, routers["user"].getProfileWithSlug);
   app.get("/users/ban/:slug", secure, admin, routers["user"].banWithSlug);
   app.get("/users/unban/:slug", secure, admin, routers["user"].unbanWithSlug);
   app.get("/users/mod/:slug", secure, admin, routers["user"].modWithSlug);
