@@ -17,6 +17,7 @@ var port = $config.port;
 global.$error = utils.dbErrorHandler;
 global.$activity = require(__dirname + "/activity");
 global.$session = require(__dirname + "/session");
+global.$notification = require(__dirname + "/notification");
 
 module.exports = function (next) {
   app.use(requestIp.mw());

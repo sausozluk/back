@@ -174,6 +174,8 @@ module.exports = {
                 return Entry.findOne({id: id});
               })
               .then(function (entry) {
+                $notification.like(req.user_mdl.slug, req.user_mdl.username, id, entry.user);
+
                 res.json({
                   success: true,
                   data: {

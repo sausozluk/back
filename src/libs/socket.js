@@ -25,6 +25,22 @@ module.exports = function (server, next) {
     }
   };
 
+  global.handleSendMessage = function (user, data) {
+    chats$.sendMessage(user, data.to, data.message);
+
+    /**
+     * {action: send_message, data: {to: target_slug, message: message_content}}
+     */
+    __send(data.to, {
+      action: 'receive_message',
+      data: {
+        slug: user.slug,
+        from: user.username,
+        message: data.message
+      }
+    });
+  };
+
   io.use(function (socket, next) {
     var token = socket.handshake.query.token;
 
@@ -56,19 +72,7 @@ module.exports = function (server, next) {
     var user = socket.__data;
 
     socket.on('send_message', function (data) {
-      chats$.sendMessage(user, data.to, data.message);
-
-      /**
-       * {action: send_message, data: {to: target_slug, message: message_content}}
-       */
-      __send(data.to, {
-        action: 'receive_message',
-        data: {
-          slug: user.slug,
-          from: user.username,
-          message: data.message
-        }
-      });
+      handleSendMessage(user, data);
     });
 
     socket.on('mark_messages', function (data) {
