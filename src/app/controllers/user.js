@@ -142,8 +142,14 @@ module.exports = {
         data.username = this.user.username;
         data.last_activities = this.user.activities || [];
 
-        if (req.user_mdl && req.user_mdl.permission > 1) {
-          data.email = this.user.email;
+        if (req.user_mdl) {
+          if (req.user_mdl.permission > 1) {
+            data.email = this.user.email;
+          }
+
+          if (this.user.notes.hasOwnProperty(req.user_mdl.slug)) {
+            data.note = this.user.notes[req.user_mdl.slug];
+          }
         }
 
         if (this.user.banned) {
@@ -272,6 +278,31 @@ module.exports = {
             .then(null, $error(res));
         }
       });
+  },
+  setNoteToUser: function (req, res) {
+    var note = req.body.note;
+    var slug = req.params.slug;
+
+    User.findOne({slug: slug})
+      .then(function (user) {
+        if (user) {
+          user.notes[req.user_mdl.slug] = note;
+
+          user.markModified('notes');
+
+          user.save()
+            .then(function () {
+              res.json({success: true});
+            })
+            .then(null, $error(res));
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bi yazar yok"
+          });
+        }
+      })
+      .then(null, $error(res));
   },
   activateMail: function (req, res) {
     var token = req.params.token;
