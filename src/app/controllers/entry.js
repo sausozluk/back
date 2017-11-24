@@ -1,10 +1,30 @@
 var Entry = $('Entry');
 var Topic = $('Topic');
 
+var fixTopicUpdatedAt = function (_id) {
+  Topic
+    .findOne({_id: _id})
+    .populate('entries', 'createdAt')
+    .then(function (topic) {
+      if (topic) {
+        var entries = topic.entries;
+        var size = entries.length;
+        if (size) {
+          var last = entries[size - 1];
+          Topic
+            .update({_id: _id}, {$set: {updatedAt: last.createdAt}})
+            .then(function () {
+            });
+        }
+      }
+    });
+};
+
 module.exports = {
   remove: function (req, res) {
     var id = req.params.id;
     var isPowerful = req.user.permission > $enum("user.permission.USER");
+    var topic_id = null;
 
     Entry
       .findOne({id: id})
@@ -14,11 +34,17 @@ module.exports = {
             .then(function (topic) {
               if (topic.entries.length === 1) {
                 topic.remove()
+              } else {
+                topic_id = topic._id;
               }
 
               return entry.remove();
             })
             .then(function () {
+              if (topic_id) {
+                fixTopicUpdatedAt(topic_id);
+              }
+
               res.json({
                 success: true
               });
@@ -43,7 +69,7 @@ module.exports = {
           var entry = new Entry({text: text, user: req.user_mdl._id, topic: topic._id});
           entry.save()
             .then(function () {
-              return Topic.update({id: topic_id}, {$push: {entries: entry._id}})
+              return Topic.update({id: topic_id}, {$push: {entries: entry._id}, $set: {updatedAt: Date.now()}})
             })
             .then(function () {
               $activity.create_entry(req.user_mdl.username, req.user_mdl.slug, entry.id);
