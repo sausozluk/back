@@ -17,6 +17,8 @@ module.exports = {
     var content = info.entry.text;
     var title = info.topic.title;
 
+    title = title.replace(/  +/g, ' ');
+
     var entry = new Entry({
       user: req.user_mdl,
       text: content
