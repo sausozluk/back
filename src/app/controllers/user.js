@@ -141,6 +141,7 @@ module.exports = {
       function (err, data) {
         data.username = this.user.username;
         data.last_activities = this.user.activities || [];
+        data.generation = this.user.generation;
 
         if (req.user_mdl) {
           if (req.user_mdl.permission > 1) {
