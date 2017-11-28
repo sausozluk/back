@@ -66,27 +66,38 @@ module.exports = {
     Topic.findOne({id: topic_id})
       .then(function (topic) {
         if (topic) {
-          var entry = new Entry({text: text, user: req.user_mdl._id, topic: topic._id});
-          entry.save()
-            .then(function () {
-              return Topic.update({id: topic_id}, {$push: {entries: entry._id}, $set: {updatedAt: Date.now()}})
-            })
-            .then(function () {
-              $activity.create_entry(req.user_mdl.username, req.user_mdl.slug, entry.id);
+          Entry.findOne({text: text, topic: topic._id})
+            .then(function (isExist) {
+              if (isExist) {
+                res.json({
+                  success: false,
+                  message: '#' + isExist.id + ' da aynı fikirde.'
+                });
+              } else {
+                var entry = new Entry({text: text, user: req.user_mdl._id, topic: topic._id});
+                entry.save()
+                  .then(function () {
+                    return Topic.update({id: topic_id}, {$push: {entries: entry._id}, $set: {updatedAt: Date.now()}})
+                  })
+                  .then(function () {
+                    $activity.create_entry(req.user_mdl.username, req.user_mdl.slug, entry.id);
 
-              res.json({
-                success: true,
-                data: {
-                  id: entry.id
-                }
-              })
+                    res.json({
+                      success: true,
+                      data: {
+                        id: entry.id
+                      }
+                    })
+                  })
+                  .then(null, $error(res));
+              }
             })
             .then(null, $error(res));
         } else {
           res.json({
             success: false,
             message: "başlık yok"
-          })
+          });
         }
       })
       .then(null, $error(res));

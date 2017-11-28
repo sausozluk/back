@@ -273,19 +273,75 @@ module.exports = {
   },
   update: function (req, res) {
     var id = req.params.id;
-    var title = req.body.title;
+    var title = req.body.title.replace(/  +/g, ' ');
     var new_slug = slug(title);
 
-    Topic.update({id: id}, {title: title, slug: new_slug}, {runValidators: true})
-      .then(function () {
-        res.json({
-          success: true,
-          data: {
-            id: id,
-            title: title,
-            slug: new_slug
-          }
-        });
+    Topic.findOne({slug: new_slug})
+      .then(function (topic) {
+        if (topic) {
+          res.json({
+            success: false,
+            message: 'nası modsun sen? var böyle başlık. yakıştıramadım.'
+          });
+        } else {
+          Topic.update({id: id}, {title: title, slug: new_slug}, {runValidators: true})
+            .then(function () {
+              res.json({
+                success: true,
+                data: {
+                  id: id,
+                  title: title,
+                  slug: new_slug
+                }
+              });
+            })
+            .then(null, $error(res));
+        }
+      })
+      .then(null, $error(res));
+  },
+  move: function (req, res) {
+    var id = req.params.id;
+    var title = req.body.title.replace(/  +/g, ' ');
+    var new_slug = slug(title);
+
+    Topic.findOne({id: id})
+      .then(function (from) {
+        if (from) {
+          Topic.findOne({slug: new_slug})
+            .then(function (to) {
+              if (to) {
+                Entry.updateMany({_id: {'$in': from.entries}}, {$set: {topic: to._id}})
+                  .then(function () {
+                    Topic.update({_id: to._id}, {$addToSet: {entries: {$each: from.entries}}})
+                      .then(function () {
+                        from.remove();
+
+                        res.json({
+                          success: true,
+                          data: {
+                            id: to.id,
+                            slug: to.slug
+                          }
+                        });
+                      })
+                      .then(null, $error(res));
+                  })
+                  .then(null, $error(res));
+              } else {
+                res.json({
+                  success: false,
+                  message: "hedef yanlış baya bi."
+                });
+              }
+            })
+            .then(null, $error(res));
+        } else {
+          res.json({
+            success: false,
+            message: "başlık yok"
+          });
+        }
       })
       .then(null, $error(res));
   }
