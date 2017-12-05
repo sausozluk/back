@@ -119,6 +119,7 @@ module.exports = {
           user.email = info.email;
           user.password = info.password;
           user.keys.activation = randomToken.generate(32);
+          user.keys.forgotPassword = randomToken.generate(32);
           user.keys.mailChange.key = randomToken.generate(32);
           user.keys.mailChange.mail = info.email;
 
