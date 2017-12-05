@@ -280,6 +280,28 @@ module.exports = {
         }
       });
   },
+  forgotPassword: function (req, res) {
+    var info = req.body;
+    var email = info.email;
+
+    var key = randomToken.generate(32);
+
+    User.findOne({email: email})
+      .then(function (exist) {
+        if (exist) {
+          exist.keys.forgotPassword = key;
+
+          exist.save()
+            .then(function () {
+              $mail.mailChange(exist.username, key, email);
+              res.json({success: true});
+            })
+            .then(null, $error(res));
+        } else {
+          res.json({success: true});
+        }
+      });
+  },
   setNoteToUser: function (req, res) {
     var note = req.body.note;
     var slug = req.params.slug;

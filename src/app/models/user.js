@@ -71,6 +71,12 @@ var User = new mongoose.Schema({
       trim: true,
       required: true
     },
+    "forgotPassword": {
+      type: String,
+      unique: true,
+      trim: true,
+      required: true
+    },
     "mailChange": {
       "key": {
         type: String,

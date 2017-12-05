@@ -11,4 +11,5 @@ module.exports = function (app) {
 
   app.post("/users/change-mail", giffMe("body", ["old_email", "password", "new_email_a", "new_email_b"]), secure, routers["user"].changeMail);
   app.post("/users/change-password", giffMe("body", ["old_password", "new_password_a", "new_password_b"]), secure, routers["user"].changePassword);
+  app.post("/users/forgot-password", giffMe("body", ['email']), routers["user"].forgotPassword);
 };

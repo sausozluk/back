@@ -4,6 +4,7 @@ var fs = require("fs");
 var activation = fs.readFileSync(__dirname + "/contents/activation_mail.html", "utf8").toString();
 var mailChange = fs.readFileSync(__dirname + "/contents/mail_change_mail.html", "utf8").toString();
 var passwordChange = fs.readFileSync(__dirname + "/contents/password_change_mail.html", "utf8").toString();
+var forgotPassword = fs.readFileSync(__dirname + "/contents/forgot_password_mail.html", "utf8").toString();
 
 var server = email.server.connect({
   user: $config.mail.user,
@@ -16,6 +17,10 @@ module.exports = {
   activation: function (username, token, mail) {
     var template = activation.template($config.site, username, $config.site + "/aktivasyon/" + token);
     this.send("aktivasyon zamanı", mail, template);
+  },
+  forgotPassword: function (username, token, mail) {
+    var template = forgotPassword.template($config.site, username, $config.site + "/sifremi-unuttum/" + token);
+    this.send("şifreni unutmuşsun", mail, template);
   },
   mailChange: function (username, token, mail) {
     var template = mailChange.template($config.site, username, $config.site + "/yeni-mail/" + token);
