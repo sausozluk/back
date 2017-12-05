@@ -293,7 +293,7 @@ module.exports = {
 
           exist.save()
             .then(function () {
-              $mail.mailChange(exist.username, key, email);
+              $mail.forgotPassword(exist.username, key, email);
               res.json({success: true});
             })
             .then(null, $error(res));
