@@ -7,7 +7,8 @@ var Id = new mongoose.Schema({
   collection: "ids",
   minimize: false,
   versionKey: false,
-  timestamps: true
+  timestamps: true,
+  usePushEach: true
 });
 
 module.exports = mongoose.model("Id", Id);

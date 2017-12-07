@@ -11,7 +11,8 @@ var Session = new mongoose.Schema({
   collection: "sessions",
   minimize: false,
   versionKey: false,
-  timestamps: true
+  timestamps: true,
+  usePushEach: true
 });
 
 mongoose.model("Session", Session);

@@ -14,7 +14,8 @@ var Chat = new mongoose.Schema({
   collection: "chats",
   minimize: false,
   versionKey: false,
-  timestamps: true
+  timestamps: true,
+  usePushEach: true
 });
 
 mongoose.model("Chat", Chat);

@@ -8,7 +8,8 @@ var Setting = new mongoose.Schema({
   collection: "settings",
   minimize: false,
   versionKey: false,
-  timestamps: false
+  timestamps: false,
+  usePushEach: true
 });
 
 module.exports = mongoose.model("Setting", Setting);

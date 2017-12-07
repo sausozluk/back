@@ -42,7 +42,8 @@ var Topic = new mongoose.Schema({
 }, {
   collection: "topics",
   minimize: false,
-  versionKey: false
+  versionKey: false,
+  usePushEach: true
 });
 
 Topic.statics.random = function (next) {

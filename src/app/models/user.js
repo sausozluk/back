@@ -110,7 +110,8 @@ var User = new mongoose.Schema({
   collection: "users",
   minimize: false,
   versionKey: false,
-  timestamps: true
+  timestamps: true,
+  usePushEach: true
 });
 
 User.pre('save', function (next) {

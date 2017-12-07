@@ -13,7 +13,8 @@ var Entry = new mongoose.Schema({
   collection: "entries",
   minimize: false,
   versionKey: false,
-  timestamps: true
+  timestamps: true,
+  usePushEach: true
 });
 
 Entry.pre('save', function (next) {

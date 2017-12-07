@@ -7,7 +7,8 @@ var Report = new mongoose.Schema({
   collection: "reports",
   minimize: false,
   versionKey: false,
-  timestamps: true
+  timestamps: true,
+  usePushEach: true
 });
 
 mongoose.model("Report", Report);
