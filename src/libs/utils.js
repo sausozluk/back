@@ -61,7 +61,7 @@ module.exports = {
       console.error(err);
       res.json({
         success: false,
-        message: err.toString()
+        message: $isProd ? 'bişiler hiç iyi gitmedi şu an' : err.toString()
       });
     };
   },

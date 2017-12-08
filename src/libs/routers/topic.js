@@ -4,5 +4,6 @@ module.exports = function (app) {
   app.get("/topics/i/random", routers["topic"].random);
   app.get("/topics/:id", routers["topic"].fetch);
   app.post("/topics/:id/move", giffMe("body", ["title"]), secure, moderator, routers["topic"].move);
+  app.post("/topics/:id/lock", secure, moderator, routers["topic"].toggleLocked);
   app.put("/topics/:id", giffMe("body", ["title"]), secure, moderator, routers["topic"].update);
 };

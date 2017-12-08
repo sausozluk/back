@@ -62,10 +62,20 @@ module.exports = {
   create: function (req, res) {
     var topic_id = req.body.topic_id;
     var text = req.body.text;
+    var isMod = req.user_mdl.permission > 0;
 
     Topic.findOne({id: topic_id})
       .then(function (topic) {
         if (topic) {
+          if (isMod ? false : topic.locked) {
+            res.json({
+              success: false,
+              message: "kitli bu başlık"
+            });
+
+            return;
+          }
+
           Entry.findOne({text: text, topic: topic._id})
             .then(function (isExist) {
               if (isExist) {

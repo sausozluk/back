@@ -36,6 +36,10 @@ var Topic = new mongoose.Schema({
     lowercase: true,
     trim: true
   },
+  "locked": {
+    type: Boolean,
+    default: false
+  },
   "entries": [{type: ObjectId, ref: 'Entry'}],
   updatedAt: {type: Date, default: Date.now},
   createdAt: {type: Date, default: Date.now}

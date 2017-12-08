@@ -263,7 +263,8 @@ module.exports = {
                 }),
                 total_page: Math.ceil(topic.entries.length / count),
                 slug: topic.slug,
-                title: topic.title
+                title: topic.title,
+                locked: topic.locked
               }
             });
           })
@@ -334,6 +335,31 @@ module.exports = {
                   message: "hedef yanlış baya bi."
                 });
               }
+            })
+            .then(null, $error(res));
+        } else {
+          res.json({
+            success: false,
+            message: "başlık yok"
+          });
+        }
+      })
+      .then(null, $error(res));
+  },
+  toggleLocked: function (req, res) {
+    var id = req.params.id;
+
+    Topic.findOne({id: id})
+      .then(function (topic) {
+        if (topic) {
+          var changeTo = !topic.locked;
+
+          Topic.update({_id: topic._id}, {locked: changeTo})
+            .then(function () {
+              res.json({
+                success: true,
+                data: changeTo
+              });
             })
             .then(null, $error(res));
         } else {
