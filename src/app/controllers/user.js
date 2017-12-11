@@ -1,4 +1,3 @@
-var Topic = $("Topic");
 var Entry = $("Entry");
 var User = $("User");
 var _ = require("lodash");
@@ -6,6 +5,7 @@ var async = require("async");
 var sha512 = require("js-sha512").sha512;
 var randomToken = require("rand-token");
 var utils = require(__dirname + "/../../libs/utils");
+var users$ = require(__dirname + '/../services/users');
 
 module.exports = {
   getProfileWithSlug: function (req, res) {
@@ -447,6 +447,40 @@ module.exports = {
         res.json({
           "success": true
         });
+      })
+      .then(null, $error(res));
+  },
+  loginWithSlug: function (req, res) {
+    var cache = {};
+
+    User.findOne({slug: req.params.slug})
+      .then(function (user) {
+        if (user) {
+          cache.user = user;
+
+          return users$.getUserUnseenMessage(user._id);
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bi yazar yok"
+          });
+        }
+      })
+      .then(function (count) {
+        if (cache.user) {
+          var user = cache.user;
+
+          return user
+            .save()
+            .then(function () {
+              var out = $out.successLogin(user, count);
+
+              res.json({
+                "success": true,
+                "data": out
+              });
+            });
+        }
       })
       .then(null, $error(res));
   }
