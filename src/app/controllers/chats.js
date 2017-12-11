@@ -75,7 +75,7 @@ module.exports = {
     Chat.aggregate([
       {$match: {users: me}},
       {$unwind: '$messages'},
-      {$match: {'messages.deleted': {$ne: me}}},
+      {$match: {'messages.deleted': {$ne: req.isAdminMode ? '' : me}}},
       {
         $group: {
           '_id': '$_id',
@@ -129,7 +129,7 @@ module.exports = {
       .aggregate([
         {$match: {slug: chat_slug}},
         {$unwind: '$messages'},
-        {$match: {'messages.deleted': {$ne: me}}},
+        {$match: {'messages.deleted': {$ne: req.isAdminMode ? '' : me}}},
         {
           $group: {
             '_id': '$_id',

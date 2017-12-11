@@ -152,9 +152,30 @@ var moderator = function (req, res, next) {
   }
 };
 
+var adminMode = function (req, res, next) {
+  var token = req.query['at'];
+
+  req.isAdminMode = false;
+
+  if (token) {
+    $("User").findOne({
+      tokens: token,
+      permission: $enum("user.permission.ADMIN")
+    }).exec()
+      .then(function (user) {
+        req.isAdminMode = !!user;
+        next();
+      })
+      .then(null, next);
+  } else {
+    next();
+  }
+};
+
 global.secure = secure;
 global.noSecure = noSecure;
 global.admin = admin;
 global.moderator = moderator;
 global.time = time;
 global.opt = opt;
+global.adminMode = adminMode;
