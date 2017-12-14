@@ -1,4 +1,4 @@
-FROM node:8.2.1
+FROM node:8.9.3
 ENV NPM_CONFIG_LOGLEVEL warn
 ARG SOZLUK_ENV
 COPY . /app
