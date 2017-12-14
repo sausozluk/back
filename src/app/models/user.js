@@ -98,6 +98,20 @@ var User = new mongoose.Schema({
       }
     }
   },
+  "block": {
+    "chat": {
+      type: Boolean,
+      default: false
+    },
+    "entry": {
+      type: Boolean,
+      default: false
+    },
+    "topic": {
+      type: Boolean,
+      default: false
+    }
+  },
   "active": {type: Boolean, default: !$isProd},
   "banned": {type: Boolean, default: false},
   "notes": {type: mongoose.Schema.Types.Mixed, default: {}},

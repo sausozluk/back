@@ -355,13 +355,16 @@ module.exports = {
       })
       .then(null, $error(res));
   },
-  banWithSlug: function (req, res) {
+  toggleBanWithSlug: function (req, res) {
+    var val = false;
+
     User.findOne({slug: req.params.slug})
       .then(function (user) {
         if (user) {
-          user.banned = true;
+          val = !user.banned;
+          user.banned = val;
           user.tokens = [];
-          user.moderation.push("BAN," + req.user_mdl.username + "," + new Date().getTime());
+          user.moderation.push((val ? "BAN" : "UNBAN") + "," + req.user_mdl.username + "," + new Date().getTime());
           return user.save();
         } else {
           res.json({
@@ -371,17 +374,20 @@ module.exports = {
         }
       })
       .then(function () {
-        res.json({success: true});
+        res.json({success: true, data: val});
       })
       .then(null, $error(res));
   },
-  unbanWithSlug: function (req, res) {
+  toggleModWithSlug: function (req, res) {
+    var val = $enum("user.permission.USER");
+
     User.findOne({slug: req.params.slug})
       .then(function (user) {
         if (user) {
-          user.banned = false;
+          val = user.permission === $enum("user.permission.MOD") ? $enum("user.permission.USER") : $enum("user.permission.MOD");
+          user.permission = val;
           user.tokens = [];
-          user.moderation.push("UNBAN," + req.user_mdl.username + "," + new Date().getTime());
+          user.moderation.push((val === $enum("user.permission.MOD") ? "MOD" : "UNMOD") + "," + req.user_mdl.username + "," + new Date().getTime());
           return user.save();
         } else {
           res.json({
@@ -391,17 +397,20 @@ module.exports = {
         }
       })
       .then(function () {
-        res.json({success: true});
+        res.json({success: true, data: val});
       })
       .then(null, $error(res));
   },
-  modWithSlug: function (req, res) {
+  toggleBlockChatWithSlug: function (req, res) {
+    var val = false;
+
     User.findOne({slug: req.params.slug})
       .then(function (user) {
         if (user) {
-          user.permission = $enum("user.permission.MOD");
+          val = !user.block.chat;
+          user.block.chat = val;
           user.tokens = [];
-          user.moderation.push("MOD," + req.user_mdl.username + "," + new Date().getTime());
+          user.moderation.push((val ? "BLOCK" : "UNBLOCK") + "_CHAT," + req.user_mdl.username + "," + new Date().getTime());
           return user.save();
         } else {
           res.json({
@@ -411,27 +420,7 @@ module.exports = {
         }
       })
       .then(function () {
-        res.json({success: true});
-      })
-      .then(null, $error(res));
-  },
-  unmodWithSlug: function (req, res) {
-    User.findOne({slug: req.params.slug})
-      .then(function (user) {
-        if (user) {
-          user.permission = $enum("user.permission.USER");
-          user.tokens = [];
-          user.moderation.push("UNMOD," + req.user_mdl.username + "," + new Date().getTime());
-          return user.save();
-        } else {
-          res.json({
-            success: false,
-            message: "böyle bi yazar yok"
-          });
-        }
-      })
-      .then(function () {
-        res.json({success: true});
+        res.json({success: true, data: val});
       })
       .then(null, $error(res));
   },

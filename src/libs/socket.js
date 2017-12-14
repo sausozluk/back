@@ -26,6 +26,19 @@ module.exports = function (server, next) {
   };
 
   global.handleSendMessage = function (user, data) {
+    if (user.block.chat) {
+      __send(user.slug, {
+        action: 'receive_message',
+        data: {
+          slug: data.to,
+          from: '[uyarı]',
+          message: 'mesaj göndermeniz engellendi'
+        }
+      });
+
+      return;
+    }
+
     chats$.sendMessage(user, data.to, data.message);
 
     /**

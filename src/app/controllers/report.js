@@ -3,28 +3,38 @@ var Report = $('Report');
 
 module.exports = {
   create: function (req, res) {
-    var entry = req.body.entry;
+    var entry_id = req.body.entry;
     var user = req.user_mdl;
 
-    Entry.findOne({id: entry})
-      .then(function (entry) {
-        if (entry) {
-          var report = new Report({user: user._id, entry: entry.id});
-          report.save()
-            .then(function () {
-              res.json({
-                success: true
-              })
-            })
-            .then(null, $error(res));
-        } else {
+    Report.findOne({user: user._id, entry: entry_id})
+      .then(function (report) {
+        if (report) {
           res.json({
             success: false,
-            message: "entry yok"
-          })
+            message: "yeter vurma öldü"
+          });
+        } else {
+          Entry.findOne({id: entry_id})
+            .then(function (entry) {
+              if (entry) {
+                var report = new Report({user: user._id, entry: entry.id});
+                report.save()
+                  .then(function () {
+                    res.json({
+                      success: true
+                    })
+                  })
+                  .then(null, $error(res));
+              } else {
+                res.json({
+                  success: false,
+                  message: "entry yok"
+                })
+              }
+            })
+            .then(null, $error(res));
         }
-      })
-      .then(null, $error(res));
+      }).then(null, $error(res));
   },
   fetch: function (req, res) {
     Report.find({})
