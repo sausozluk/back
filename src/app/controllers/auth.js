@@ -196,7 +196,7 @@ module.exports = {
 
     user.save()
       .then(function () {
-        if (req.isAdminMode) {
+        if (!req.isAdminMode) {
           $activity.logout(user.username, user.slug);
         }
 
