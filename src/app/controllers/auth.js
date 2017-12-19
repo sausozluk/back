@@ -57,6 +57,8 @@ module.exports = {
         if (cache.user) {
           var user = cache.user;
 
+          user.tokens.push(randomToken.generate(32));
+
           return user
             .save()
             .then(function () {
@@ -98,50 +100,55 @@ module.exports = {
       return;
     }
 
-    User.findOne({
-      $or: [{
-        "username": info.username
-      }, {
-        "email": info.email
-      }, {
-        "slug": slug(info.username)
-      }]
-    }).exec()
-      .then(function (user) {
-        if (user) {
-          res.json({
-            "success": false,
-            "message": "böyle birisi var ama"
-          });
-        } else {
-          user = new User();
-          user.username = info.username;
-          user.email = info.email;
-          user.password = info.password;
-          user.keys.activation = randomToken.generate(32);
-          user.keys.forgotPassword = randomToken.generate(32);
-          user.keys.mailChange.key = randomToken.generate(32);
-          user.keys.mailChange.mail = info.email;
+    $generation.get((function (current) {
+      User.findOne({
+        $or: [{
+          "username": info.username
+        }, {
+          "email": info.email
+        }, {
+          "slug": slug(info.username)
+        }]
+      }).exec()
+        .then(function (user) {
+          if (user) {
+            res.json({
+              "success": false,
+              "message": "böyle birisi var ama"
+            });
+          } else {
+            user = new User();
+            user.username = info.username;
+            user.email = info.email;
+            user.password = info.password;
+            user.keys.activation = randomToken.generate(32);
+            user.keys.forgotPassword = randomToken.generate(32);
+            user.keys.mailChange.key = randomToken.generate(32);
+            user.keys.mailChange.mail = info.email;
+            user.tokens.push(randomToken.generate(32));
+            user.generation = current;
+            user.slug = slug(info.username);
 
-          cache.user = user;
+            cache.user = user;
 
-          return user.save();
-        }
-      })
-      .then(function () {
-        if (cache.user) {
-          var user = cache.user;
+            return user.save();
+          }
+        })
+        .then(function () {
+          if (cache.user) {
+            var user = cache.user;
 
-          $mail.activation(user.username, user.keys.activation, user.email);
+            $mail.activation(user.username, user.keys.activation, user.email);
 
-          $activity.register(user.username, user.slug);
+            $activity.register(user.username, user.slug);
 
-          res.json({
-            "success": true
-          });
-        }
-      })
-      .then(null, $error(res));
+            res.json({
+              "success": true
+            });
+          }
+        })
+        .then(null, $error(res));
+    }).bind(this));
   },
   check: function (req, res) {
     var token = req.headers.token || $config.jokerToken;
@@ -189,7 +196,10 @@ module.exports = {
 
     user.save()
       .then(function () {
-        $activity.logout(user.username, user.slug);
+        if (req.isAdminMode) {
+          $activity.logout(user.username, user.slug);
+        }
+
         $session.setFalseWithToken(token);
 
         res.json({

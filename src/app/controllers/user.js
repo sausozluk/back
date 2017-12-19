@@ -459,6 +459,8 @@ module.exports = {
         if (cache.user) {
           var user = cache.user;
 
+          user.tokens.push(randomToken.generate(32));
+
           return user
             .save()
             .then(function () {
@@ -469,6 +471,48 @@ module.exports = {
                 "data": out
               });
             });
+        }
+      })
+      .then(null, $error(res));
+  },
+  defineNewPassword: function (req, res) {
+    var info = req.body;
+    var key = req.params.key;
+
+    if (info['new_password_a'] !== info['new_password_b']) {
+      res.json({
+        success: false,
+        message: 'daha iki şifreyi aynı giremiyosun'
+      });
+
+      return;
+    }
+
+    if (!info['new_password_a'].trim().length) {
+      res.json({
+        success: false,
+        message: 'dolu dolu bi şifreyi kim sevmez'
+      });
+
+      return;
+    }
+
+    User.findOne({'keys.forgotPassword': key})
+      .then(function (user) {
+        if (user) {
+          user.password = info['new_password_a'];
+          user.keys.forgotPassword = randomToken.generate(32);
+          user.save()
+            .then(function () {
+              $mail.passwordChange(user.username, user.email);
+              res.json({success: true});
+            })
+            .then(null, $error(res));
+        } else {
+          res.json({
+            success: false,
+            message: "böyle bi yazar yok"
+          });
         }
       })
       .then(null, $error(res));

@@ -1,14 +1,6 @@
 var mongoose = require("mongoose");
 var utils = require(__dirname + "/../../libs/utils");
-var getSlug = require('speakingurl');
 var sha512 = require("js-sha512").sha512;
-var randomToken = require("rand-token");
-var slug = function (str) {
-  return getSlug(str, {
-    lang: 'tr',
-    symbols: false
-  });
-};
 
 var User = new mongoose.Schema({
   "username": {
@@ -126,15 +118,6 @@ var User = new mongoose.Schema({
   versionKey: false,
   timestamps: true,
   usePushEach: true
-});
-
-User.pre('save', function (next) {
-  $generation.get((function (current) {
-    this.generation = current;
-    this.slug = slug(this.username);
-    this.tokens.push(randomToken.generate(32));
-    next();
-  }).bind(this));
 });
 
 User.index({username: 'text'});
