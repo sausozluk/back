@@ -20,6 +20,8 @@ env:
   - secure: Bwm44nPi4pK1iAKy9Vx2AccT+/9CQblREGoXFd5fdSf66nmK/DxxbFdBE/t39alW9/G8NHSnNAefxuzXzu8qIlGMzccsAtZFX0WptKz6K74ItD6GnR6V8BiL2BvKF8R/9+s2lvcqmSYlNjdw+7PZyT9rDGcgE8BGCCJY9r/e1VP/aKPwN87zwctZKClvvL+pWOc4a0d4N0GVq7mf2ZrRbO+AYHPiN1JfNlUKHV26Mgga21ohe+iZUWx67DczJcfZZnbXRQvzuVzLVPPkKJNyZ1osO0yLZEoim7EkgJf0x3CCRRg93WfG8fzTaijOlAloma6BYifId3K17SdOPX6iFkDdFEjaDdfLf1WJUOzY22WxrGMgMZmlAVLiAzUhD7AMiPTVnMsqbcaL0/GU72CC4NHUshiGN1m6ZU+XFl3ErEaY0r1PONURt+jx+//PW4Qw5WDtF29JzL//8pb80O8MTH09WsxwMpBD37HA+0Hsc4Ptdn+GYpbxsv+wiInzC4+W6qb/CbTWSrhbh4CeEYdo69Yuj4vXy9CbethfkE/vgDLRy7noPZ+DzajYjPXfWVGlrWvQxOyHubIIFcOWu+FcP5aCubxLVN3z52URMLUCURGesKvlX+XDAwj+L8nJoJuFmW0XQo/SCm2vzweltgg7bSm/pB891azKsJ0cgrS29zQ=
   - SOZLUK_ENV=test
 before_install:
+- openssl aes-256-cbc -K $encrypted_4f35dbab3554_key -iv $encrypted_4f35dbab3554_iv
+  -in deploy_key.enc -out ../../deploy_key -d
 - sudo apt-get update
 - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 - docker login --username=$DOCKER_HUB_USERNAME --password=$DOCKER_HUB_PASSWORD
@@ -29,6 +31,7 @@ before_install:
 deploy:
   provider: script
   skip_cleanup: true
-  script: cd .. && chmod 400 deploy_key && ssh -o StrictHostKeyChecking=no -i deploy_key ubuntu@sausozluk.net "cd sozluk && ./deploy.sh $TRAVIS_BUILD_NUMBER"
+  script: cd .. && chmod 400 deploy_key && ssh -o StrictHostKeyChecking=no -i deploy_key
+    ubuntu@sausozluk.net "cd sozluk && ./deploy.sh $TRAVIS_BUILD_NUMBER"
   on:
     branch: master
